@@ -1,0 +1,36 @@
+{
+  "name": "@kleros/cross-chain-sundial-proxy",
+  "version": "0.1.0",
+  "description": "Cross-chain arbitration proxy for Sundial",
+  "main": "index.js",
+  "repository": "git@github.com:kleros/cross-chain-sundial-proxy.git",
+  "author": "Kleros",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lint": "run-p -s lint:*",
+    "lint:js": "eslint .",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "fix": "run-p -s fix:*",
+    "fix:js": "eslint --fix '**/*.js'",
+    "fix:sol": "prettier --write 'contracts/**/*.sol'",
+    "prepare": "husky install"
+  },
+  "workspaces": [
+    "contracts"
+  ],
+  "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-import-resolver-parcel": "^1.10.5",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.2",
+    "prettier-plugin-solidity": "^1.0.0-beta.15",
+    "solhint": "^3.3.6",
+    "solhint-plugin-prettier": "^0.0.5"
+  }
+}
