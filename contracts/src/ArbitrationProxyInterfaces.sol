@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.2;
+
+pragma solidity ~0.8.9;
 
 import {IArbitrable} from "@kleros/erc-792/contracts/IArbitrable.sol";
 import {IEvidence} from "@kleros/erc-792/contracts/erc-1497/IEvidence.sol";

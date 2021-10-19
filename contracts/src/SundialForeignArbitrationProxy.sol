@@ -8,7 +8,7 @@
  *  @deployments: []
  */
 
-pragma solidity ^0.7.2;
+pragma solidity ~0.8.9;
 
 import {IArbitrator} from "@kleros/erc-792/contracts/IArbitrator.sol";
 import {FxBaseRootTunnel} from "./dependencies/FxBaseRootTunnel.sol";

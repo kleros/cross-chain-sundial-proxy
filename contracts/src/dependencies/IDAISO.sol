@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.8;
+pragma solidity ~0.8.9;
 
 interface IDAISO {
     /* DAISO */
@@ -49,4 +49,21 @@ interface IDAISO {
         uint256 arbitrationCost,
         uint256 reclaimedAt
     );
+
+    function createDisputeForProject(uint256 projectId) external nonReentrant returns (bool);
+
+    /**
+     * @notice Receives a failed attempt to request arbitration. TRUSTED.
+     * @dev Currently this can happen only if the arbitration cost increased.
+     * @param _questionID The ID of the question.
+     * @param _requester The address of the arbitration requester.
+     */
+    function receiveArbitrationFailure(bytes32 _questionID, address _requester) external;
+
+    /**
+     * @notice Receives the answer to a specified question. TRUSTED.
+     * @param _questionID The ID of the question.
+     * @param _answer The answer from the arbitrator.
+     */
+    function receiveArbitrationAnswer(bytes32 _questionID, bytes32 _answer) external;
 }

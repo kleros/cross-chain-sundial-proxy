@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 // IFxMessageProcessor represents interface to process message
 interface IFxMessageProcessor {
@@ -16,18 +16,27 @@ interface IFxMessageProcessor {
 abstract contract FxBaseChildTunnel is IFxMessageProcessor {
     // MessageTunnel on L1 will get data from this event
     event MessageSent(bytes message);
+
+    // fx child
     address public fxChild;
+
+    // fx root tunnel
     address public fxRootTunnel;
 
-    constructor(address _fxChild, address _fxRootTunnel) {
+    constructor(address _fxChild) {
         fxChild = _fxChild;
-        fxRootTunnel = _fxRootTunnel;
     }
 
     // Sender must be fxRootTunnel in case of ERC20 tunnel
     modifier validateSender(address sender) {
         require(sender == fxRootTunnel, "FxBaseChildTunnel: INVALID_SENDER_FROM_ROOT");
         _;
+    }
+
+    // set fxRootTunnel if not set already
+    function setFxRootTunnel(address _fxRootTunnel) external {
+        require(fxRootTunnel == address(0x0), "FxBaseChildTunnel: ROOT_TUNNEL_ALREADY_SET");
+        fxRootTunnel = _fxRootTunnel;
     }
 
     function processMessageFromRoot(
@@ -42,14 +51,13 @@ abstract contract FxBaseChildTunnel is IFxMessageProcessor {
     /**
      * @notice Emit message that can be received on Root Tunnel
      * @dev Call the internal function when need to emit message
-     * @dev virtual is required to be able to mock this function in tests
      * @param message bytes message that will be sent to Root Tunnel
      * some message examples -
      *   abi.encode(tokenId);
      *   abi.encode(tokenId, tokenMetadata);
      *   abi.encode(messageType, messageData);
      */
-    function _sendMessageToRoot(bytes memory message) internal virtual {
+    function _sendMessageToRoot(bytes memory message) internal {
         emit MessageSent(message);
     }
 
