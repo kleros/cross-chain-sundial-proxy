@@ -13,7 +13,6 @@ pragma solidity ~0.8.9;
 import {IArbitrator} from "@kleros/erc-792/contracts/IArbitrator.sol";
 import {FxBaseRootTunnel} from "./dependencies/FxBaseRootTunnel.sol";
 import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./ArbitrationProxyInterfaces.sol";
-import {IDAISO} from "./dependencies/IDAISO.sol";
 
 /**
  * @title Arbitration proxy for Realitio on Ethereum side (A.K.A. the Foreign Chain).
@@ -49,18 +48,18 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
     }
 
     struct DisputeDetails {
-        bytes32 questionID; // The question ID for the dispute.
+        uint256 projectID; // The project ID for the dispute.
         address requester; // The address of the requester who managed to go through with the arbitration request.
     }
 
-    /// @dev Tracks arbitration requests for question ID. arbitrationRequests[questionID][requester]
-    mapping(bytes32 => mapping(address => ArbitrationRequest)) public arbitrationRequests;
+    /// @dev Tracks arbitration requests for project ID. arbitrationRequests[projectID][requester]
+    mapping(uint256 => mapping(address => ArbitrationRequest)) public arbitrationRequests;
 
-    /// @dev Associates dispute ID to question ID and the requester. disputeIDToDisputeDetails[disputeID] -> {questionID, requester}
+    /// @dev Associates dispute ID to project ID and the requester.
     mapping(uint256 => DisputeDetails) public disputeIDToDisputeDetails;
 
-    /// @dev Whether a dispute has already been created for the given question ID or not. questionIDToDisputeExists[questionID]
-    mapping(bytes32 => bool) public questionIDToDisputeExists;
+    /// @dev Whether a dispute has already been created for the given project ID or not.
+    mapping(uint256 => bool) public projectIDToDisputeExists;
 
     modifier onlyArbitrator() {
         require(msg.sender == address(arbitrator), "Only arbitrator allowed");
@@ -99,14 +98,13 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
     }
 
     /**
-     * @notice Requests arbitration for the given question and contested answer.
-     * @param _questionID The ID of the question.
-     * @param _maxPrevious The maximum value of the current bond for the question. The arbitration request will get rejected if the current bond is greater than _maxPrevious. If set to 0, _maxPrevious is ignored.
+     * @notice Requests arbitration for the given projectID.
+     * @param _projectID The ID of the project.
      */
-    function requestArbitration(bytes32 _questionID, uint256 _maxPrevious) external payable override {
-        require(!questionIDToDisputeExists[_questionID], "Dispute already exists");
+    function createDisputeRequest(uint256 _projectID) external payable override {
+        require(!projectIDToDisputeExists[_projectID], "Dispute already exists");
 
-        ArbitrationRequest storage arbitration = arbitrationRequests[_questionID][msg.sender];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][msg.sender];
         require(arbitration.status == Status.None, "Arbitration already requested");
 
         uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);
@@ -115,20 +113,20 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
         arbitration.status = Status.Requested;
         arbitration.deposit = uint248(msg.value);
 
-        bytes4 methodSelector = IHomeArbitrationProxy(0).receiveArbitrationRequest.selector;
-        bytes memory data = abi.encodeWithSelector(methodSelector, _questionID, msg.sender, _maxPrevious);
+        bytes4 methodSelector = IHomeArbitrationProxy.createDisputeForProject.selector;
+        bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, msg.sender);
         _sendMessageToChild(data);
 
-        emit ArbitrationRequested(_questionID, msg.sender, _maxPrevious);
+        emit ArbitrationRequested(_projectID, msg.sender);
     }
 
     /**
-     * @notice Receives the acknowledgement of the arbitration request for the given question and requester. TRUSTED.
-     * @param _questionID The ID of the question.
+     * @notice Receives the acknowledgement of the arbitration request for the given project and requester. TRUSTED.
+     * @param _projectID The ID of the project.
      * @param _requester The address of the arbitration requester.
      */
-    function receiveArbitrationAcknowledgement(bytes32 _questionID, address _requester) public override onlyBridge {
-        ArbitrationRequest storage arbitration = arbitrationRequests[_questionID][_requester];
+    function receiveArbitrationAcknowledgement(uint256 _projectID, address _requester) public override onlyBridge {
+        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][_requester];
         require(arbitration.status == Status.Requested, "Invalid arbitration status");
 
         uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);
@@ -138,10 +136,10 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
                 arbitrator.createDispute{value: arbitrationCost}(NUMBER_OF_CHOICES_FOR_ARBITRATOR, arbitratorExtraData)
             returns (uint256 disputeID) {
                 DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[disputeID];
-                disputeDetails.questionID = _questionID;
+                disputeDetails.projectID = _projectID;
                 disputeDetails.requester = _requester;
 
-                questionIDToDisputeExists[_questionID] = true;
+                projectIDToDisputeExists[_projectID] = true;
 
                 // At this point, arbitration.deposit is guaranteed to be greater than or equal to the arbitration cost.
                 uint256 remainder = arbitration.deposit - arbitrationCost;
@@ -153,81 +151,73 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
                     payable(_requester).send(remainder);
                 }
 
-                emit ArbitrationCreated(_questionID, _requester, disputeID);
-                emit Dispute(arbitrator, disputeID, META_EVIDENCE_ID, uint256(_questionID));
+                emit ArbitrationCreated(_projectID, _requester, disputeID);
+                emit Dispute(arbitrator, disputeID, META_EVIDENCE_ID, uint256(_projectID));
             } catch {
                 arbitration.status = Status.Failed;
-                emit ArbitrationFailed(_questionID, _requester);
+                emit ArbitrationFailed(_projectID, _requester);
             }
         } else {
             arbitration.status = Status.Failed;
-            emit ArbitrationFailed(_questionID, _requester);
+            emit ArbitrationFailed(_projectID, _requester);
         }
     }
 
     /**
      * @notice Receives the cancelation of the arbitration request for the given question and requester. TRUSTED.
-     * @param _questionID The ID of the question.
+     * @param _projectID The ID of the question.
      * @param _requester The address of the arbitration requester.
      */
-    function receiveArbitrationCancelation(bytes32 _questionID, address _requester) public override onlyBridge {
-        ArbitrationRequest storage arbitration = arbitrationRequests[_questionID][_requester];
+    function receiveArbitrationCancelation(uint256 _projectID, address _requester) public override onlyBridge {
+        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][_requester];
         require(arbitration.status == Status.Requested, "Invalid arbitration status");
         uint256 deposit = arbitration.deposit;
 
-        delete arbitrationRequests[_questionID][_requester];
+        delete arbitrationRequests[_projectID][_requester];
 
         payable(_requester).send(deposit);
 
-        emit ArbitrationCanceled(_questionID, _requester);
+        emit ArbitrationCanceled(_projectID, _requester);
     }
 
     /**
      * @notice Cancels the arbitration in case the dispute could not be created.
-     * @param _questionID The ID of the question.
+     * @param _projectID The ID of the question.
      * @param _requester The address of the arbitration requester.
      */
-    function handleFailedDisputeCreation(bytes32 _questionID, address _requester) external override {
-        ArbitrationRequest storage arbitration = arbitrationRequests[_questionID][_requester];
+    function handleFailedDisputeCreation(uint256 _projectID, address _requester) external override {
+        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][_requester];
         require(arbitration.status == Status.Failed, "Invalid arbitration status");
         uint256 deposit = arbitration.deposit;
 
-        delete arbitrationRequests[_questionID][_requester];
+        delete arbitrationRequests[_projectID][_requester];
 
         payable(_requester).send(deposit);
 
-        bytes4 methodSelector = IHomeArbitrationProxy(0).receiveArbitrationFailure.selector;
-        bytes memory data = abi.encodeWithSelector(methodSelector, _questionID, _requester);
+        bytes4 methodSelector = IHomeArbitrationProxy.receiveArbitrationFailure.selector;
+        bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, _requester);
         _sendMessageToChild(data);
 
-        emit ArbitrationCanceled(_questionID, _requester);
+        emit ArbitrationCanceled(_projectID, _requester);
     }
 
     /**
      * @notice Rules a specified dispute.
-     * @dev Note that 0 is reserved for "Unable/refused to arbitrate" and we map it to `bytes32(-1)` which has a similar meaning in Realitio.
      * @param _disputeID The ID of the dispute in the ERC792 arbitrator.
      * @param _ruling The ruling given by the arbitrator.
      */
     function rule(uint256 _disputeID, uint256 _ruling) external override onlyArbitrator {
         DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[_disputeID];
-        bytes32 questionID = disputeDetails.questionID;
+        uint256 projectID = disputeDetails.projectID;
         address requester = disputeDetails.requester;
 
-        ArbitrationRequest storage arbitration = arbitrationRequests[questionID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[projectID][requester];
         require(arbitration.status == Status.Created, "Invalid arbitration status");
 
         arbitration.status = Status.Ruled;
 
-        // Realitio ruling is shifted by 1 compared to Kleros.
-        // For example, jurors refusing to rule is `0` on Kleros, but uint(-1) on Realitio.
-        // The line below could be written more explicitly as:
-        //     bytes32(_ruling == 0 ? uint256(-1) : _ruling - 1)
-        // But the way it is written saves some gas.
-        bytes32 answer = bytes32(_ruling - 1);
-
-        bytes4 methodSelector = IHomeArbitrationProxy(0).receiveArbitrationAnswer.selector;
-        bytes memory data = abi.encodeWithSelector(methodSelector, questionID, answer);
+        bytes4 methodSelector = IHomeArbitrationProxy.receiveArbitrationAnswer.selector;
+        bytes memory data = abi.encodeWithSelector(methodSelector, projectID, answer);
         _sendMessageToChild(data);
 
         emit Ruling(arbitrator, _disputeID, _ruling);
@@ -238,7 +228,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
      * @return The fee to create a dispute.
      */
     function getDisputeFee(
-        bytes32 /* _questionID */
+        uint256 /* _projectID */
     ) external view override returns (uint256) {
         return arbitrator.arbitrationCost(arbitratorExtraData);
     }
