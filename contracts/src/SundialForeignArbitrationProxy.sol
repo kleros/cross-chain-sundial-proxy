@@ -32,7 +32,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
     uint256 public constant META_EVIDENCE_ID = 0;
 
     /// @dev The number of choices for the arbitrator. Kleros is currently able to provide ruling values of up to 2^256 - 2.
-    uint256 public constant NUMBER_OF_CHOICES_FOR_ARBITRATOR = type(uint256).max - 1;
+    uint256 public constant NUMBER_OF_CHOICES_FOR_ARBITRATOR = 2;
 
     enum Status {
         None,
@@ -207,6 +207,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
      * @param _ruling The ruling given by the arbitrator.
      */
     function rule(uint256 _disputeID, uint256 _ruling) external override onlyArbitrator {
+        require(_ruling <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, "Invalid ruling");
         DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[_disputeID];
         uint256 projectID = disputeDetails.projectID;
         address requester = disputeDetails.requester;
