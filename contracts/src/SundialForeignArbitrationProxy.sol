@@ -225,6 +225,15 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
     }
 
     /**
+     * @notice Allows to submit evidence for a particular question.
+     * @param _arbitrationID The ID of the arbitration related to the question.
+     * @param _evidenceURI Link to evidence.
+     */
+    function submitEvidence(uint256 _arbitrationID, string calldata _evidenceURI) external override {
+        emit Evidence(arbitrator, _arbitrationID, msg.sender, _evidenceURI);
+    }
+
+    /**
      * @notice Gets the fee to create a dispute.
      * @return The fee to create a dispute.
      */
