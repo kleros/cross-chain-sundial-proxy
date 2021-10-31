@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Types.sol";
 import "./DAISOInterface.sol";
 
-import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./ArbitrationProxyInterfaces.sol";
+import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./dependencies/0.8.x/ArbitrationProxyInterfaces.sol";
 
 contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterface {
     using SafeMath for uint256;
