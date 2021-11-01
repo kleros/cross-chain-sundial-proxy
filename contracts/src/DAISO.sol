@@ -68,6 +68,11 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      */
     mapping(uint256 => uint256) public disputeIDtoArbitrationID;
 
+    modifier onlyBridge() {
+        require(msg.sender == address(this), "Can only be called via bridge");
+        _;
+    }
+
     /**
      * @dev Throws if the caller is not the sender of the invest stream.
      */
@@ -757,16 +762,11 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
         returns (
             Types.Status status,
             uint256 disputeID,
-            uint256 reclaimedAt,
-            uint256 evidenceGroup,
-            uint256 metaEvidenceID
+            uint256 reclaimedAt
         )
     {
         status = arbitrations[projectId].status;
-        disputeID = arbitrations[projectId].disputeID;
         reclaimedAt = arbitrations[projectId].reclaimedAt;
-        evidenceGroup = arbitrations[projectId].evidenceGroup;
-        metaEvidenceID = arbitrations[projectId].metaEvidenceID;
     }
 
     /**
@@ -777,7 +777,7 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      *  Throws if the now not exceeds arbitration.reclaimedAt + 86400(reclaimed time).
      * @param projectId The id of the project arbitration for which to query the delta.
      */
-    function reclaimFunds(uint256 projectId) external nonReentrant returns (bool result) {
+    function reclaimFunds(uint256 projectId) external nonReentrant {
         Types.Arbitration storage arbitration = arbitrations[projectId];
 
         require(arbitration.status == Types.Status.Reclaimed, "STATUS_NOT_RECLAIMED");
@@ -793,10 +793,6 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
         cancelProjectForInvests[projectId].proposalForCancelStatus = 1;
 
         arbitrations[projectId].status = Types.Status.Resolved;
-
-        result = arbitration.invest.send(arbitration.feeDeposit);
-
-        return result;
     }
 
     /**
@@ -816,25 +812,12 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
             invest: payable(msg.sender),
             project: project.sender,
             status: Types.Status.Reclaimed,
-            disputeID: 0,
-            evidenceGroup: 0,
-            metaEvidenceID: _metaEvidenceID,
-            reclaimedAt: block.timestamp,
-            feeDeposit: msg.value,
-            projectFeeDeposit: 0
+            reclaimedAt: block.timestamp
         });
 
         cancelProjectForInvests[projectId].preReclaimedAt = block.timestamp;
 
-        emit Arbitration(
-            projectId,
-            _metaEvidenceID,
-            _metaEvidence,
-            project.sender,
-            msg.sender,
-            msg.value,
-            block.timestamp
-        );
+        emit Arbitration(projectId, project.sender, msg.sender, block.timestamp);
     }
 
     /**
@@ -842,53 +825,33 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      * @dev Throws if the arbitration id does not point to a valid project.
      *  Throws if the arbitration.status is not Reclaimed.
      *  Throws if the now exceeds arbitration.reclaimedAt + 86400(reclaimed time).
-     * @param projectId The id of the project arbitration for which to query the delta.
-     * // TODO: Edit
+     * @param _projectId The id of the project arbitration for which to query the delta.
      */
-    function createDisputeForProject(uint256 projectId) external payable nonReentrant returns (bool) {
-        Types.Arbitration storage arbitration = arbitrations[projectId];
+    function receiveCreateDisputeRequest(uint256 _projectId, address _requester) external onlyBridge {
+        Types.Arbitration storage arbitration = arbitrations[_projectId];
 
-        /* verify msg.value is same as arbitrationCost*/
-        require(msg.value == IArbitrator(arbitratorAddress).arbitrationCost(""), "MSGVALUE_NOT_SAME_ARBITRATIONCOST");
-        require(arbitration.status == Types.Status.Reclaimed, "STATUS_NOT_SAME_RECLAIMED");
+        require(arbitration.status == Types.Status.Reclaimed, "Request already exists");
         require(block.timestamp - arbitration.reclaimedAt <= 86400, "ARRIVAL_RECLAIMEDPERIOD");
 
-        arbitrations[projectId].projectFeeDeposit = msg.value;
-        arbitrations[projectId].status = Types.Status.Disputed;
-        arbitrations[projectId].evidenceGroup = nextEvidenceGroup;
-
-        arbitrations[projectId].disputeID = IArbitrator(arbitratorAddress).createDispute{value: msg.value}(2, "");
-
-        nextEvidenceGroup = nextEvidenceGroup + 1;
-
-        disputeIDtoArbitrationID[arbitration.disputeID] = projectId;
-
-        emit Dispute(
-            IArbitrator(arbitratorAddress),
-            arbitrations[projectId].disputeID,
-            arbitrations[projectId].metaEvidenceID,
-            arbitrations[projectId].evidenceGroup
-        );
-        return true;
+        arbitrations[_projectId].status = Types.Status.Disputed;
+        emit RequestAcknowledged(_projectId, _requester);
     }
 
     /**
      * @notice Receives a failed attempt to request arbitration. TRUSTED.
      * @dev Currently this can happen only if the arbitration cost increased.
-     * @param _questionID The ID of the question.
-     * @param _requester The address of the user that requested arbitration.
-     * TODO
+     * @param _projectId The ID of the question.
      */
-    function receiveArbitrationFailure(bytes32 _questionID, address _requester) public override onlyBridge {
-        Request storage request = requests[_questionID][_requester];
-        require(request.status == Status.AwaitingRuling, "Invalid request status");
+    function receiveArbitrationFailure(uint256 _projectId) public override onlyBridge {
+        Types.Arbitration storage arbitration = arbitrations[_projectId];
 
-        // At this point, only the request.status is set, simply reseting the status to Status.None is enough.
-        request.status = Status.Reclaimed;
+        require(arbitration.status == Types.Status.Disputed, "Invalid arbitration status");
 
-        realitio.cancelArbitration(_questionID);
+        // At this point, only the arbitration.status is set,
+        // simply reseting the status to Status.Reclaimed is enough.
+        arbitration.status = Types.Status.Reclaimed;
 
-        emit ArbitrationFailed(_questionID, _requester);
+        emit ArbitrationFailed(_projectId);
     }
 
     /**
@@ -896,14 +859,14 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      * @param _projectId The ID of the project.
      * @param _answer The answer from the arbitrator.
      */
-    function receiveArbitrationAnswer(uint256 _projectId, bytes32 _answer) public override onlyBridge {
+    function receiveArbitrationAnswer(uint256 _projectId, uint256 _answer) public override onlyBridge {
         Types.Arbitration storage arbitration = arbitrations[_projectId];
-        require(arbitration.status == Type.Status.Disputed, "Invalid request status");
+        require(arbitration.status == Types.Status.Disputed, "Invalid request status");
 
-        arbitration.status = Type.Status.Resolved;
+        arbitration.status = Types.Status.Resolved;
 
         _executeRuling(_projectId, _answer);
-        emit ArbitratorAnswered(_questionID, _answer);
+        emit ArbitratorAnswered(_projectId, _answer);
     }
 
     /**
@@ -915,7 +878,6 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      * @param _ruling The result of Irabitrator.
      */
     function _executeRuling(uint256 _projectId, uint256 _ruling) internal {
-        Types.Arbitration storage arbitration = arbitrations[_projectId];
         Types.CancelProjectForInvest storage cancelProjectForInvest = cancelProjectForInvests[_projectId];
 
         if (_ruling == 1) {
@@ -928,18 +890,11 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
             if (block.timestamp <= cancelProjectForInvest.exitStopTime) {
                 cancelProjectForInvests[_projectId].exitStopTime = block.timestamp;
             }
-
-            result = arbitration.invest.send(arbitration.feeDeposit);
         } else if (_ruling == 2) {
             cancelProjectForInvests[_projectId].proposalForCancelStatus = 2;
-            result = arbitration.project.send(arbitration.feeDeposit);
 
             delete arbitrations[_projectId];
         } else if (_ruling == 0) {
-            uint256 fee = arbitration.feeDeposit.div(2);
-            result = arbitration.invest.send(fee);
-            result = arbitration.project.send(fee);
-
             delete arbitrations[_projectId];
         }
     }

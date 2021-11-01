@@ -122,7 +122,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      * @notice Requests arbitration for the given projectID.
      * @param _projectID The ID of the project.
      */
-    function createDisputeRequest(uint256 _projectID) external payable override {
+    function createDisputeForProjectRequest(uint256 _projectID) external payable override {
         require(!arbitrationIDToDisputeExists[_projectID], "Dispute already exists");
 
         ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][msg.sender];
@@ -134,7 +134,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         arbitration.status = Status.Requested;
         arbitration.deposit = uint248(msg.value);
 
-        bytes4 methodSelector = IHomeArbitrationProxy.createDisputeForProject.selector;
+        bytes4 methodSelector = IHomeArbitrationProxy.receiveCreateDisputeRequest.selector;
         bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, msg.sender);
         _sendMessageToChild(data);
 

@@ -52,12 +52,7 @@ library Types {
         address payable invest;
         address payable project;
         Status status;
-        uint256 disputeID;
-        uint256 evidenceGroup;
-        uint256 metaEvidenceID;
         uint256 reclaimedAt;
-        uint256 feeDeposit;
-        uint256 projectFeeDeposit;
     }
 
     enum RulingOptions {

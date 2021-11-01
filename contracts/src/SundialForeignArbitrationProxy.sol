@@ -101,7 +101,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
      * @notice Requests arbitration for the given projectID.
      * @param _projectID The ID of the project.
      */
-    function createDisputeRequest(uint256 _projectID) external payable override {
+    function createDisputeForProjectRequest(uint256 _projectID) external payable override {
         require(!projectIDToDisputeExists[_projectID], "Dispute already exists");
 
         ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][msg.sender];
@@ -113,7 +113,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
         arbitration.status = Status.Requested;
         arbitration.deposit = uint248(msg.value);
 
-        bytes4 methodSelector = IHomeArbitrationProxy.createDisputeForProject.selector;
+        bytes4 methodSelector = IHomeArbitrationProxy.receiveCreateDisputeRequest.selector;
         bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, msg.sender);
         _sendMessageToChild(data);
 
@@ -218,7 +218,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
         arbitration.status = Status.Ruled;
 
         bytes4 methodSelector = IHomeArbitrationProxy.receiveArbitrationAnswer.selector;
-        bytes memory data = abi.encodeWithSelector(methodSelector, projectID, answer);
+        bytes memory data = abi.encodeWithSelector(methodSelector, projectID, _ruling);
         _sendMessageToChild(data);
 
         emit Ruling(arbitrator, _disputeID, _ruling);
@@ -229,7 +229,7 @@ contract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootT
      * @param _arbitrationID The ID of the arbitration related to the question.
      * @param _evidenceURI Link to evidence.
      */
-    function submitEvidence(uint256 _arbitrationID, string calldata _evidenceURI) external override {
+    function submitEvidence(uint256 _arbitrationID, string calldata _evidenceURI) external {
         emit Evidence(arbitrator, _arbitrationID, msg.sender, _evidenceURI);
     }
 

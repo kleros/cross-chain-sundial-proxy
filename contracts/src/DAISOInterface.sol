@@ -40,13 +40,5 @@ interface DAISOInterface {
         uint256 cancelTime
     );
 
-    event Arbitration(
-        uint256 indexed projectId,
-        uint256 indexed _metaEvidenceID,
-        string _metaEvidence,
-        address project,
-        address indexed invest,
-        uint256 arbitrationCost,
-        uint256 reclaimedAt
-    );
+    event Arbitration(uint256 indexed projectId, address project, address indexed invest, uint256 reclaimedAt);
 }
