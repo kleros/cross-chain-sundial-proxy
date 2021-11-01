@@ -394,7 +394,6 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         arbitration.status = Status.Ruled;
 
         bytes4 methodSelector = IHomeArbitrationProxy(0).receiveArbitrationAnswer.selector;
-        // Realitio ruling is shifted by 1 compared to Kleros.
         bytes memory data = abi.encodeWithSelector(methodSelector, arbitrationID, finalRuling);
         _sendMessageToChild(data);
 
