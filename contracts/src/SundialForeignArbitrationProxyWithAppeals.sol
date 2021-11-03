@@ -13,7 +13,7 @@ pragma solidity ^0.7.6;
 import {IDisputeResolver, IArbitrator} from "@kleros/dispute-resolver-interface-contract/contracts/solc-0.7.x/IDisputeResolver.sol";
 import {CappedMath} from "@kleros/ethereum-libraries/contracts/CappedMath.sol";
 
-import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./dependencies/0.7.x/ArbitrationProxyInterfaces.sol";
+import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./ArbitrationProxyInterfaces.sol";
 import {FxBaseRootTunnel} from "./dependencies/0.7.x/FxBaseRootTunnel.sol";
 
 /**

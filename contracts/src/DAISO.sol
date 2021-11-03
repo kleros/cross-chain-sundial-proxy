@@ -12,7 +12,7 @@ import "./Types.sol";
 import "./DAISOInterface.sol";
 
 import {FxBaseChildTunnel} from "./dependencies/0.8.x/FxBaseChildTunnel.sol";
-import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./dependencies/0.8.x/ArbitrationProxyInterfaces.sol";
+import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./ArbitrationProxyInterfaces.sol";
 
 contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterface, FxBaseChildTunnel {
     using SafeMath for uint256;
