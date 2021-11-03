@@ -44,7 +44,7 @@ async function deployForeignProxy({ deployments, getNamedAccounts, getChainId, e
   // Foreign Proxy deploy will happen AFTER the Home Proxy deploy, so we need to subtract 1 from the nonce
   const homeProxyAddress = getContractAddress(counterPartyDeployer, nonce - 1);
 
-  const foreignProxy = await deploy("RealitioForeignArbitrationProxy", {
+  const foreignProxy = await deploy("SundialForeignArbitrationProxy", {
     from: deployer,
     args: [checkpointManager, fxRoot, homeProxyAddress, arbitrator, arbitratorExtraData, metaEvidence, termsOfService],
     gas: 8000000,

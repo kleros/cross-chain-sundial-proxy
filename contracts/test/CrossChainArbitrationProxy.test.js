@@ -37,7 +37,7 @@ let requesterAddress;
 describe("Cross-Chain Arbitration", () => {
   beforeEach("Setup contracts", async () => {
     [governor, asker, answerer, requester, other] = await ethers.getSigners();
-    ({ arbitrator, realitio, foreignProxy, homeProxy } = await deployContracts(governor));
+    ({ arbitrator, foreignProxy, homeProxy } = await deployContracts(governor));
     requesterAddress = await requester.getAddress();
   });
 
@@ -374,7 +374,6 @@ describe("Cross-Chain Arbitration", () => {
 
     return {
       arbitrator,
-      realitio,
       foreignProxy,
       homeProxy,
     };

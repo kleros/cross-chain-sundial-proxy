@@ -1,0 +1,919 @@
+{
+  "address": "0x28FA9DD09eFed57ac8881ED043dCa9dF7d1A4683",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_checkpointManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_fxRoot",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_homeProxy",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IArbitrator",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_arbitratorExtraData",
+          "type": "bytes"
+        },
+        {
+          "internalType": "string",
+          "name": "_metaEvidence",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_termsOfService",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "ArbitrationCanceled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        }
+      ],
+      "name": "ArbitrationCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "ArbitrationFailed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_requester",
+          "type": "address"
+        }
+      ],
+      "name": "ArbitrationRequested",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IArbitrator",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_metaEvidenceID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_evidenceGroupID",
+          "type": "uint256"
+        }
+      ],
+      "name": "Dispute",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IArbitrator",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_evidenceGroupID",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_party",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_evidence",
+          "type": "string"
+        }
+      ],
+      "name": "Evidence",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_metaEvidenceID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_evidence",
+          "type": "string"
+        }
+      ],
+      "name": "MetaEvidence",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IArbitrator",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_ruling",
+          "type": "uint256"
+        }
+      ],
+      "name": "Ruling",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "META_EVIDENCE_ID",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "NUMBER_OF_CHOICES_FOR_ARBITRATOR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "SEND_MESSAGE_EVENT_SIG",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "arbitrationRequests",
+      "outputs": [
+        {
+          "internalType": "enum SundialForeignArbitrationProxy.Status",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint248",
+          "name": "deposit",
+          "type": "uint248"
+        },
+        {
+          "internalType": "address",
+          "name": "requester",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "arbitrator",
+      "outputs": [
+        {
+          "internalType": "contract IArbitrator",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "arbitratorExtraData",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "checkpointManager",
+      "outputs": [
+        {
+          "internalType": "contract ICheckpointManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "createDisputeForProjectRequest",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "disputeIDToDisputeDetails",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "projectID",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "fxChildTunnel",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "fxRoot",
+      "outputs": [
+        {
+          "internalType": "contract IFxStateSender",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDisputeFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "handleFailedDisputeCreation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "processedExits",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "projectIDToDisputeExists",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "receiveArbitrationAcknowledgement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "receiveArbitrationCancelation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "inputData",
+          "type": "bytes"
+        }
+      ],
+      "name": "receiveMessage",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ruling",
+          "type": "uint256"
+        }
+      ],
+      "name": "rule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_arbitrationID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_evidenceURI",
+          "type": "string"
+        }
+      ],
+      "name": "submitEvidence",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "termsOfService",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xa88b4c9f4232f96bdb3546cd44b371393b1b7e6b5e912d3b2732276575214c04",
+  "receipt": {
+    "to": null,
+    "from": "0x3b434e0D2a6C7F53d5C556D7BAeE8942c351Cf1a",
+    "contractAddress": "0x28FA9DD09eFed57ac8881ED043dCa9dF7d1A4683",
+    "transactionIndex": 4,
+    "gasUsed": "2800898",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000800100000000000000000000000000000000000000000000000000000000000000080008000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xe4a67dcf26073658a69793b6d01da50a58978a65ef7223d49fc30e1a16547ae6",
+    "transactionHash": "0xa88b4c9f4232f96bdb3546cd44b371393b1b7e6b5e912d3b2732276575214c04",
+    "logs": [
+      {
+        "transactionIndex": 4,
+        "blockNumber": 5784480,
+        "transactionHash": "0xa88b4c9f4232f96bdb3546cd44b371393b1b7e6b5e912d3b2732276575214c04",
+        "address": "0x28FA9DD09eFed57ac8881ED043dCa9dF7d1A4683",
+        "topics": [
+          "0x61606860eb6c87306811e2695215385101daab53bd6ab4e9f9049aead9363c7d",
+          "0x0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000422f697066732f516d63326370525a675435506d52345a696b44735647353478656a4b463632715342426e59663452356270694e482f7265616c6974696f2e6a736f6e000000000000000000000000000000000000000000000000000000000000",
+        "logIndex": 6,
+        "blockHash": "0xe4a67dcf26073658a69793b6d01da50a58978a65ef7223d49fc30e1a16547ae6"
+      }
+    ],
+    "blockNumber": 5784480,
+    "cumulativeGasUsed": "3357319",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x2890bA17EfE978480615e330ecB65333b880928e",
+    "0x3d1d3E34f7fB6D26245E6640E1c50710eFFf15bA",
+    "0x2c851D061277527503EB444CE43FAc1DF4e2bbc9",
+    "0xCF5F227De666AF96Cf671Cd5727247A427b28b7A",
+    "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "/ipfs/Qmc2cpRZgT5PmR4ZikDsVG54xejKF62qSBBnYf4R5bpiNH/realitio.json",
+    "/ipfs/Qmf67KPWvFLSQEczsb8Kh9HtGUevNtSSVELqTS8yTe95GW/omen-rules.pdf"
+  ],
+  "solcInputHash": "127b2a11293c1ac47855702efa1893d5",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_checkpointManager\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_fxRoot\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_homeProxy\",\"type\":\"address\"},{\"internalType\":\"contract IArbitrator\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_arbitratorExtraData\",\"type\":\"bytes\"},{\"internalType\":\"string\",\"name\":\"_metaEvidence\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_termsOfService\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"ArbitrationCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_disputeID\",\"type\":\"uint256\"}],\"name\":\"ArbitrationCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"ArbitrationFailed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_requester\",\"type\":\"address\"}],\"name\":\"ArbitrationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"contract IArbitrator\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_disputeID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_metaEvidenceID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_evidenceGroupID\",\"type\":\"uint256\"}],\"name\":\"Dispute\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"contract IArbitrator\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_evidenceGroupID\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_party\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_evidence\",\"type\":\"string\"}],\"name\":\"Evidence\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_metaEvidenceID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_evidence\",\"type\":\"string\"}],\"name\":\"MetaEvidence\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"contract IArbitrator\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_disputeID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_ruling\",\"type\":\"uint256\"}],\"name\":\"Ruling\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"META_EVIDENCE_ID\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NUMBER_OF_CHOICES_FOR_ARBITRATOR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SEND_MESSAGE_EVENT_SIG\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"arbitrationRequests\",\"outputs\":[{\"internalType\":\"enum SundialForeignArbitrationProxy.Status\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint248\",\"name\":\"deposit\",\"type\":\"uint248\"},{\"internalType\":\"address\",\"name\":\"requester\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"arbitrator\",\"outputs\":[{\"internalType\":\"contract IArbitrator\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"arbitratorExtraData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"checkpointManager\",\"outputs\":[{\"internalType\":\"contract ICheckpointManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"createDisputeForProjectRequest\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"disputeIDToDisputeDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"projectID\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fxChildTunnel\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fxRoot\",\"outputs\":[{\"internalType\":\"contract IFxStateSender\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"getDisputeFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"handleFailedDisputeCreation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"processedExits\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"projectIDToDisputeExists\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"receiveArbitrationAcknowledgement\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"receiveArbitrationCancelation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"inputData\",\"type\":\"bytes\"}],\"name\":\"receiveMessage\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_disputeID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_ruling\",\"type\":\"uint256\"}],\"name\":\"rule\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_arbitrationID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_evidenceURI\",\"type\":\"string\"}],\"name\":\"submitEvidence\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"termsOfService\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This contract is meant to be deployed to the Ethereum chains where Kleros is deployed.\",\"kind\":\"dev\",\"methods\":{\"constructor\":{\"params\":{\"_arbitrator\":\"Arbitrator contract address.\",\"_arbitratorExtraData\":\"The extra data used to raise a dispute in the arbitrator.\",\"_checkpointManager\":\"For Polygon FX-portal bridge\",\"_fxRoot\":\"Address of the FxRoot contract of the Polygon bridge\",\"_homeProxy\":\"The address of the proxy.\",\"_metaEvidence\":\"The URI of the meta evidence file.\",\"_termsOfService\":\"The path for the Terms of Service for Kleros as an arbitrator for Realitio.\"}},\"createDisputeForProjectRequest(uint256)\":{\"params\":{\"_projectID\":\"The ID of the project.\"}},\"getDisputeFee(uint256)\":{\"returns\":{\"_0\":\"The fee to create a dispute.\"}},\"handleFailedDisputeCreation(uint256)\":{\"params\":{\"_projectID\":\"The ID of the question.\"}},\"receiveArbitrationAcknowledgement(uint256)\":{\"params\":{\"_projectID\":\"The ID of the project.\"}},\"receiveArbitrationCancelation(uint256)\":{\"params\":{\"_projectID\":\"The ID of the question.\"}},\"receiveMessage(bytes)\":{\"details\":\"This function verifies if the transaction actually happened on child chain\",\"params\":{\"inputData\":\"RLP encoded data of the reference tx containing following list of fields  0 - headerNumber - Checkpoint header block number containing the reference tx  1 - blockProof - Proof that the block header (in the child chain) is a leaf in the submitted merkle root  2 - blockNumber - Block number containing the reference tx on child chain  3 - blockTime - Reference tx block time  4 - txRoot - Transactions root of block  5 - receiptRoot - Receipts root of block  6 - receipt - Receipt of the reference transaction  7 - receiptProof - Merkle proof of the reference receipt  8 - branchMask - 32 bits denoting the path of receipt in merkle tree  9 - receiptLogIndex - Log Index to read from the receipt\"}},\"rule(uint256,uint256)\":{\"params\":{\"_disputeID\":\"The ID of the dispute in the ERC792 arbitrator.\",\"_ruling\":\"The ruling given by the arbitrator.\"}},\"submitEvidence(uint256,string)\":{\"params\":{\"_arbitrationID\":\"The ID of the arbitration related to the question.\",\"_evidenceURI\":\"Link to evidence.\"}}},\"stateVariables\":{\"META_EVIDENCE_ID\":{\"details\":\"The ID of the MetaEvidence for disputes.\"},\"NUMBER_OF_CHOICES_FOR_ARBITRATOR\":{\"details\":\"The number of choices for the arbitrator. Kleros is currently able to provide ruling values of up to 2^256 - 2.\"},\"arbitrationRequests\":{\"details\":\"Tracks arbitration requests for project ID.\"},\"arbitrator\":{\"details\":\"The address of the arbitrator. TRUSTED.\"},\"arbitratorExtraData\":{\"details\":\"The extra data used to raise a dispute in the arbitrator.\"},\"disputeIDToDisputeDetails\":{\"details\":\"Associates dispute ID to project ID and the requester.\"},\"projectIDToDisputeExists\":{\"details\":\"Whether a dispute has already been created for the given project ID or not.\"},\"termsOfService\":{\"details\":\"The path for the Terms of Service for Kleros as an arbitrator for Realitio.\"}},\"title\":\"Arbitration proxy for Realitio on Ethereum side (A.K.A. the Foreign Chain).\",\"version\":1},\"userdoc\":{\"events\":{\"ArbitrationCanceled(uint256)\":{\"notice\":\"Should be emitted when the arbitration is canceled by the Home Chain.\"},\"ArbitrationCreated(uint256,uint256)\":{\"notice\":\"Should be emitted when the dispute is created.\"},\"ArbitrationFailed(uint256)\":{\"notice\":\"Should be emitted when the dispute could not be created.\"},\"ArbitrationRequested(uint256,address)\":{\"notice\":\"Should be emitted when the arbitration is requested.\"}},\"kind\":\"user\",\"methods\":{\"constructor\":{\"notice\":\"Creates an arbitration proxy on the foreign chain.\"},\"createDisputeForProjectRequest(uint256)\":{\"notice\":\"Requests arbitration for the given projectID.\"},\"getDisputeFee(uint256)\":{\"notice\":\"Gets the fee to create a dispute.\"},\"handleFailedDisputeCreation(uint256)\":{\"notice\":\"Cancels the arbitration in case the dispute could not be created.\"},\"receiveArbitrationAcknowledgement(uint256)\":{\"notice\":\"Receives the acknowledgement of the arbitration request for the given project. TRUSTED.\"},\"receiveArbitrationCancelation(uint256)\":{\"notice\":\"Receives the cancelation of the arbitration request for the given question. TRUSTED.\"},\"receiveMessage(bytes)\":{\"notice\":\"receive message from  L2 to L1, validated by proof\"},\"rule(uint256,uint256)\":{\"notice\":\"Rules a specified dispute.\"},\"submitEvidence(uint256,string)\":{\"notice\":\"Allows to submit evidence for a particular question.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/SundialForeignArbitrationProxy.sol\":\"SundialForeignArbitrationProxy\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@kleros/erc-792/contracts/IArbitrable.sol\":{\"content\":\"/**\\n * @authors: [@ferittuncer, @hbarcelos]\\n * @reviewers: [@remedcu*]\\n * @auditors: []\\n * @bounties: []\\n * @deployments: []\\n * SPDX-License-Identifier: MIT\\n */\\npragma solidity >=0.7;\\n\\nimport \\\"./IArbitrator.sol\\\";\\n\\n/**\\n * @title IArbitrable\\n * Arbitrable interface.\\n * When developing arbitrable contracts, we need to:\\n * - Define the action taken when a ruling is received by the contract.\\n * - Allow dispute creation. For this a function must call arbitrator.createDispute{value: _fee}(_choices,_extraData);\\n */\\ninterface IArbitrable {\\n    /**\\n     * @dev To be raised when a ruling is given.\\n     * @param _arbitrator The arbitrator giving the ruling.\\n     * @param _disputeID ID of the dispute in the Arbitrator contract.\\n     * @param _ruling The ruling which was given.\\n     */\\n    event Ruling(IArbitrator indexed _arbitrator, uint256 indexed _disputeID, uint256 _ruling);\\n\\n    /**\\n     * @dev Give a ruling for a dispute. Must be called by the arbitrator.\\n     * The purpose of this function is to ensure that the address calling it has the right to rule on the contract.\\n     * @param _disputeID ID of the dispute in the Arbitrator contract.\\n     * @param _ruling Ruling given by the arbitrator. Note that 0 is reserved for \\\"Not able/wanting to make a decision\\\".\\n     */\\n    function rule(uint256 _disputeID, uint256 _ruling) external;\\n}\\n\",\"keccak256\":\"0x1803a3433a78c509b20bd9477a2c60a71b2ce1ee7e17eb0ef0601618a8a72526\",\"license\":\"MIT\"},\"@kleros/erc-792/contracts/IArbitrator.sol\":{\"content\":\"/**\\n * @authors: [@ferittuncer, @hbarcelos]\\n * @reviewers: [@remedcu*]\\n * @auditors: []\\n * @bounties: []\\n * @deployments: []\\n * SPDX-License-Identifier: MIT\\n */\\n\\npragma solidity >=0.7;\\n\\nimport \\\"./IArbitrable.sol\\\";\\n\\n/**\\n * @title Arbitrator\\n * Arbitrator abstract contract.\\n * When developing arbitrator contracts we need to:\\n * - Define the functions for dispute creation (createDispute) and appeal (appeal). Don't forget to store the arbitrated contract and the disputeID (which should be unique, may nbDisputes).\\n * - Define the functions for cost display (arbitrationCost and appealCost).\\n * - Allow giving rulings. For this a function must call arbitrable.rule(disputeID, ruling).\\n */\\ninterface IArbitrator {\\n    enum DisputeStatus {Waiting, Appealable, Solved}\\n\\n    /**\\n     * @dev To be emitted when a dispute is created.\\n     * @param _disputeID ID of the dispute.\\n     * @param _arbitrable The contract which created the dispute.\\n     */\\n    event DisputeCreation(uint256 indexed _disputeID, IArbitrable indexed _arbitrable);\\n\\n    /**\\n     * @dev To be emitted when a dispute can be appealed.\\n     * @param _disputeID ID of the dispute.\\n     * @param _arbitrable The contract which created the dispute.\\n     */\\n    event AppealPossible(uint256 indexed _disputeID, IArbitrable indexed _arbitrable);\\n\\n    /**\\n     * @dev To be emitted when the current ruling is appealed.\\n     * @param _disputeID ID of the dispute.\\n     * @param _arbitrable The contract which created the dispute.\\n     */\\n    event AppealDecision(uint256 indexed _disputeID, IArbitrable indexed _arbitrable);\\n\\n    /**\\n     * @dev Create a dispute. Must be called by the arbitrable contract.\\n     * Must be paid at least arbitrationCost(_extraData).\\n     * @param _choices Amount of choices the arbitrator can make in this dispute.\\n     * @param _extraData Can be used to give additional info on the dispute to be created.\\n     * @return disputeID ID of the dispute created.\\n     */\\n    function createDispute(uint256 _choices, bytes calldata _extraData) external payable returns (uint256 disputeID);\\n\\n    /**\\n     * @dev Compute the cost of arbitration. It is recommended not to increase it often, as it can be highly time and gas consuming for the arbitrated contracts to cope with fee augmentation.\\n     * @param _extraData Can be used to give additional info on the dispute to be created.\\n     * @return cost Amount to be paid.\\n     */\\n    function arbitrationCost(bytes calldata _extraData) external view returns (uint256 cost);\\n\\n    /**\\n     * @dev Appeal a ruling. Note that it has to be called before the arbitrator contract calls rule.\\n     * @param _disputeID ID of the dispute to be appealed.\\n     * @param _extraData Can be used to give extra info on the appeal.\\n     */\\n    function appeal(uint256 _disputeID, bytes calldata _extraData) external payable;\\n\\n    /**\\n     * @dev Compute the cost of appeal. It is recommended not to increase it often, as it can be higly time and gas consuming for the arbitrated contracts to cope with fee augmentation.\\n     * @param _disputeID ID of the dispute to be appealed.\\n     * @param _extraData Can be used to give additional info on the dispute to be created.\\n     * @return cost Amount to be paid.\\n     */\\n    function appealCost(uint256 _disputeID, bytes calldata _extraData) external view returns (uint256 cost);\\n\\n    /**\\n     * @dev Compute the start and end of the dispute's current or next appeal period, if possible. If not known or appeal is impossible: should return (0, 0).\\n     * @param _disputeID ID of the dispute.\\n     * @return start The start of the period.\\n     * @return end The end of the period.\\n     */\\n    function appealPeriod(uint256 _disputeID) external view returns (uint256 start, uint256 end);\\n\\n    /**\\n     * @dev Return the status of a dispute.\\n     * @param _disputeID ID of the dispute to rule.\\n     * @return status The status of the dispute.\\n     */\\n    function disputeStatus(uint256 _disputeID) external view returns (DisputeStatus status);\\n\\n    /**\\n     * @dev Return the current ruling of a dispute. This is useful for parties to know if they should appeal.\\n     * @param _disputeID ID of the dispute.\\n     * @return ruling The ruling which has been given or the one which will be given if there is no appeal.\\n     */\\n    function currentRuling(uint256 _disputeID) external view returns (uint256 ruling);\\n}\\n\",\"keccak256\":\"0x240a4142f9ec379da0333dfc82409b7b058cff9ea118368eb5e8f15447996c1e\",\"license\":\"MIT\"},\"@kleros/erc-792/contracts/erc-1497/IEvidence.sol\":{\"content\":\"/**\\n * @authors: [@ferittuncer, @hbarcelos]\\n * @reviewers: []\\n * @auditors: []\\n * @bounties: []\\n * @deployments: []\\n * SPDX-License-Identifier: MIT\\n */\\npragma solidity >=0.7;\\n\\nimport \\\"../IArbitrator.sol\\\";\\n\\n/** @title IEvidence\\n *  ERC-1497: Evidence Standard\\n */\\ninterface IEvidence {\\n    /**\\n     * @dev To be emitted when meta-evidence is submitted.\\n     * @param _metaEvidenceID Unique identifier of meta-evidence.\\n     * @param _evidence A link to the meta-evidence JSON.\\n     */\\n    event MetaEvidence(uint256 indexed _metaEvidenceID, string _evidence);\\n\\n    /**\\n     * @dev To be raised when evidence is submitted. Should point to the resource (evidences are not to be stored on chain due to gas considerations).\\n     * @param _arbitrator The arbitrator of the contract.\\n     * @param _evidenceGroupID Unique identifier of the evidence group the evidence belongs to.\\n     * @param _party The address of the party submiting the evidence. Note that 0x0 refers to evidence not submitted by any party.\\n     * @param _evidence A URI to the evidence JSON file whose name should be its keccak256 hash followed by .json.\\n     */\\n    event Evidence(\\n        IArbitrator indexed _arbitrator,\\n        uint256 indexed _evidenceGroupID,\\n        address indexed _party,\\n        string _evidence\\n    );\\n\\n    /**\\n     * @dev To be emitted when a dispute is created to link the correct meta-evidence to the disputeID.\\n     * @param _arbitrator The arbitrator of the contract.\\n     * @param _disputeID ID of the dispute in the Arbitrator contract.\\n     * @param _metaEvidenceID Unique identifier of meta-evidence.\\n     * @param _evidenceGroupID Unique identifier of the evidence group that is linked to this dispute.\\n     */\\n    event Dispute(\\n        IArbitrator indexed _arbitrator,\\n        uint256 indexed _disputeID,\\n        uint256 _metaEvidenceID,\\n        uint256 _evidenceGroupID\\n    );\\n}\\n\",\"keccak256\":\"0x1ccedf5213730632540c748486637d7b1977ee73375818bf498a8276ca49dd13\",\"license\":\"MIT\"},\"src/ArbitrationProxyInterfaces.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity >=0.7;\\n\\nimport {IArbitrable} from \\\"@kleros/erc-792/contracts/IArbitrable.sol\\\";\\nimport {IEvidence} from \\\"@kleros/erc-792/contracts/erc-1497/IEvidence.sol\\\";\\n\\ninterface IHomeArbitrationProxy {\\n    /**\\n     * @notice To be emitted when the arbitration request acknowledgement is sent to the Foreign Chain.\\n     * @param _projectID The ID of the question.\\n     */\\n    event RequestAcknowledged(uint256 indexed _projectID);\\n\\n    /**\\n     * @notice To be emitted when the arbitration request is canceled.\\n     * @param _projectID The ID of the question.\\n     */\\n    event RequestCanceled(uint256 indexed _projectID);\\n\\n    /**\\n     * @notice To be emitted when the dispute could not be created on the Foreign Chain.\\n     * @dev This will happen if the arbitration fee increases in between the arbitration request and acknowledgement.\\n     * @param _projectID The ID of the question.\\n     */\\n    event ArbitrationFailed(uint256 indexed _projectID);\\n\\n    /**\\n     * @notice To be emitted when receiving the answer from the arbitrator.\\n     * @param _projectID The ID of the question.\\n     * @param _answer The answer from the arbitrator.\\n     */\\n    event ArbitratorAnswered(uint256 indexed _projectID, uint256 _answer);\\n\\n    /**\\n     * @notice Requests arbitration for the given projectID.\\n     * @param _projectID The ID of the project.\\n     */\\n    function receiveCreateDisputeRequest(uint256 _projectID) external;\\n\\n    /**\\n     * @notice Receives a failed attempt to request arbitration. TRUSTED.\\n     * @dev Currently this can happen only if the arbitration cost increased.\\n     * @param _projectID The ID of the question.\\n     */\\n    function receiveArbitrationFailure(uint256 _projectID) external;\\n\\n    /**\\n     * @notice Receives the answer to a specified question. TRUSTED.\\n     * @param _projectID The ID of the question.\\n     * @param _answer The answer from the arbitrator.\\n     */\\n    function receiveArbitrationAnswer(uint256 _projectID, uint256 _answer) external;\\n}\\n\\ninterface IForeignArbitrationProxy is IArbitrable, IEvidence {\\n    /**\\n     * @notice Should be emitted when the arbitration is requested.\\n     * @param _projectID The ID of the question with the request for arbitration.\\n     * @param _requester The address of the arbitration requester.\\n     */\\n    event ArbitrationRequested(uint256 indexed _projectID, address indexed _requester);\\n\\n    /**\\n     * @notice Should be emitted when the dispute is created.\\n     * @param _projectID The ID of the question with the request for arbitration.\\n     * @param _disputeID The ID of the dispute.\\n     */\\n    event ArbitrationCreated(uint256 indexed _projectID, uint256 indexed _disputeID);\\n\\n    /**\\n     * @notice Should be emitted when the dispute could not be created.\\n     * @dev This will happen if there is an increase in the arbitration fees\\n     * between the time the arbitration is made and the time it is acknowledged.\\n     * @param _projectID The ID of the question with the request for arbitration.\\n     */\\n    event ArbitrationFailed(uint256 indexed _projectID);\\n\\n    /**\\n     * @notice Should be emitted when the arbitration is canceled by the Home Chain.\\n     * @param _projectID The ID of the question with the request for arbitration.\\n     */\\n    event ArbitrationCanceled(uint256 indexed _projectID);\\n\\n    /**\\n     * @notice Requests arbitration for the given projectID.\\n     * @param _projectID The ID of the project.\\n     */\\n    function createDisputeForProjectRequest(uint256 _projectID) external payable;\\n\\n    /**\\n     * @notice Receives the acknowledgement of the arbitration request for the given question. TRUSTED.\\n     * @param _projectID The ID of the question.\\n     */\\n    function receiveArbitrationAcknowledgement(uint256 _projectID) external;\\n\\n    /**\\n     * @notice Receives the cancelation of the arbitration request for the given question. TRUSTED.\\n     * @param _projectID The ID of the question.\\n     */\\n    function receiveArbitrationCancelation(uint256 _projectID) external;\\n\\n    /**\\n     * @notice Cancels the arbitration in case the dispute could not be created.\\n     * @param _projectID The ID of the question.\\n     */\\n    function handleFailedDisputeCreation(uint256 _projectID) external;\\n\\n    /**\\n     * @notice Gets the fee to create a dispute.\\n     * @param _projectID the ID of the question.\\n     * @return The fee to create a dispute.\\n     */\\n    function getDisputeFee(uint256 _projectID) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0x80c5004e3bb183bc9be6c347eaa8321123341bd329fba0b55492d3a378d02cdf\",\"license\":\"MIT\"},\"src/SundialForeignArbitrationProxy.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\n/**\\n *  @authors: [@shalzz]\\n *  @reviewers: []\\n *  @auditors: []\\n *  @bounties: []\\n *  @deployments: []\\n */\\n\\npragma solidity ~0.8.9;\\n\\nimport {IArbitrator} from \\\"@kleros/erc-792/contracts/IArbitrator.sol\\\";\\nimport {FxBaseRootTunnel} from \\\"./dependencies/0.8.x/FxBaseRootTunnel.sol\\\";\\nimport {IForeignArbitrationProxy, IHomeArbitrationProxy} from \\\"./ArbitrationProxyInterfaces.sol\\\";\\n\\n/**\\n * @title Arbitration proxy for Realitio on Ethereum side (A.K.A. the Foreign Chain).\\n * @dev This contract is meant to be deployed to the Ethereum chains where Kleros is deployed.\\n */\\ncontract SundialForeignArbitrationProxy is IForeignArbitrationProxy, FxBaseRootTunnel {\\n    /// @dev The address of the arbitrator. TRUSTED.\\n    IArbitrator public immutable arbitrator;\\n\\n    /// @dev The extra data used to raise a dispute in the arbitrator.\\n    bytes public arbitratorExtraData;\\n\\n    /// @dev The path for the Terms of Service for Kleros as an arbitrator for Realitio.\\n    string public termsOfService;\\n\\n    /// @dev The ID of the MetaEvidence for disputes.\\n    uint256 public constant META_EVIDENCE_ID = 0;\\n\\n    /// @dev The number of choices for the arbitrator. Kleros is currently able to provide ruling values of up to 2^256 - 2.\\n    uint256 public constant NUMBER_OF_CHOICES_FOR_ARBITRATOR = 2;\\n\\n    enum Status {\\n        None,\\n        Requested,\\n        Created,\\n        Ruled,\\n        Failed\\n    }\\n\\n    struct ArbitrationRequest {\\n        Status status; // Status of the arbitration.\\n        uint248 deposit; // The deposit paid by the requester at the time of the arbitration.\\n        address requester; // The address of the requester who managed to go through with the arbitration request.\\n    }\\n\\n    struct DisputeDetails {\\n        uint256 projectID; // The project ID for the dispute.\\n    }\\n\\n    /// @dev Tracks arbitration requests for project ID.\\n    mapping(uint256 => ArbitrationRequest) public arbitrationRequests;\\n\\n    /// @dev Associates dispute ID to project ID and the requester.\\n    mapping(uint256 => DisputeDetails) public disputeIDToDisputeDetails;\\n\\n    /// @dev Whether a dispute has already been created for the given project ID or not.\\n    mapping(uint256 => bool) public projectIDToDisputeExists;\\n\\n    modifier onlyArbitrator() {\\n        require(msg.sender == address(arbitrator), \\\"Only arbitrator allowed\\\");\\n        _;\\n    }\\n\\n    modifier onlyBridge() {\\n        require(msg.sender == address(this), \\\"Can only be called via bridge\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @notice Creates an arbitration proxy on the foreign chain.\\n     * @param _checkpointManager For Polygon FX-portal bridge\\n     * @param _fxRoot Address of the FxRoot contract of the Polygon bridge\\n     * @param _homeProxy The address of the proxy.\\n     * @param _arbitrator Arbitrator contract address.\\n     * @param _arbitratorExtraData The extra data used to raise a dispute in the arbitrator.\\n     * @param _metaEvidence The URI of the meta evidence file.\\n     * @param _termsOfService The path for the Terms of Service for Kleros as an arbitrator for Realitio.\\n     */\\n    constructor(\\n        address _checkpointManager,\\n        address _fxRoot,\\n        address _homeProxy,\\n        IArbitrator _arbitrator,\\n        bytes memory _arbitratorExtraData,\\n        string memory _metaEvidence,\\n        string memory _termsOfService\\n    ) FxBaseRootTunnel(_checkpointManager, _fxRoot, _homeProxy) {\\n        arbitrator = _arbitrator;\\n        arbitratorExtraData = _arbitratorExtraData;\\n        termsOfService = _termsOfService;\\n\\n        emit MetaEvidence(META_EVIDENCE_ID, _metaEvidence);\\n    }\\n\\n    /**\\n     * @notice Requests arbitration for the given projectID.\\n     * @param _projectID The ID of the project.\\n     */\\n    function createDisputeForProjectRequest(uint256 _projectID) external payable override {\\n        require(!projectIDToDisputeExists[_projectID], \\\"Dispute already exists\\\");\\n\\n        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID];\\n        require(arbitration.status == Status.None, \\\"Arbitration already requested\\\");\\n\\n        uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);\\n        require(msg.value >= arbitrationCost, \\\"Deposit value too low\\\");\\n\\n        arbitration.status = Status.Requested;\\n        arbitration.deposit = uint248(msg.value);\\n        arbitration.requester = msg.sender;\\n\\n        bytes4 methodSelector = IHomeArbitrationProxy.receiveCreateDisputeRequest.selector;\\n        bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, msg.sender);\\n        _sendMessageToChild(data);\\n\\n        emit ArbitrationRequested(_projectID, msg.sender);\\n    }\\n\\n    /**\\n     * @notice Receives the acknowledgement of the arbitration request for the given project. TRUSTED.\\n     * @param _projectID The ID of the project.\\n     */\\n    function receiveArbitrationAcknowledgement(uint256 _projectID) public override onlyBridge {\\n        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID];\\n        require(arbitration.status == Status.Requested, \\\"Invalid arbitration status\\\");\\n\\n        uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);\\n\\n        if (arbitration.deposit >= arbitrationCost) {\\n            try\\n                arbitrator.createDispute{value: arbitrationCost}(NUMBER_OF_CHOICES_FOR_ARBITRATOR, arbitratorExtraData)\\n            returns (uint256 disputeID) {\\n                DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[disputeID];\\n                disputeDetails.projectID = _projectID;\\n\\n                projectIDToDisputeExists[_projectID] = true;\\n\\n                // At this point, arbitration.deposit is guaranteed to be greater than or equal to the arbitration cost.\\n                uint256 remainder = arbitration.deposit - arbitrationCost;\\n\\n                arbitration.status = Status.Created;\\n                arbitration.deposit = 0;\\n\\n                if (remainder > 0) {\\n                    payable(arbitration.requester).send(remainder);\\n                }\\n\\n                emit ArbitrationCreated(_projectID, disputeID);\\n                emit Dispute(arbitrator, disputeID, META_EVIDENCE_ID, uint256(_projectID));\\n            } catch {\\n                arbitration.status = Status.Failed;\\n                emit ArbitrationFailed(_projectID);\\n            }\\n        } else {\\n            arbitration.status = Status.Failed;\\n            emit ArbitrationFailed(_projectID);\\n        }\\n    }\\n\\n    /**\\n     * @notice Receives the cancelation of the arbitration request for the given question. TRUSTED.\\n     * @param _projectID The ID of the question.\\n     */\\n    function receiveArbitrationCancelation(uint256 _projectID) public override onlyBridge {\\n        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID];\\n        require(arbitration.status == Status.Requested, \\\"Invalid arbitration status\\\");\\n        uint256 deposit = arbitration.deposit;\\n\\n        delete arbitrationRequests[_projectID];\\n\\n        payable(arbitration.requester).send(deposit);\\n\\n        emit ArbitrationCanceled(_projectID);\\n    }\\n\\n    /**\\n     * @notice Cancels the arbitration in case the dispute could not be created.\\n     * @param _projectID The ID of the question.\\n     */\\n    function handleFailedDisputeCreation(uint256 _projectID) external override {\\n        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID];\\n        require(arbitration.status == Status.Failed, \\\"Invalid arbitration status\\\");\\n        uint256 deposit = arbitration.deposit;\\n\\n        delete arbitrationRequests[_projectID];\\n\\n        payable(arbitration.requester).send(deposit);\\n\\n        bytes4 methodSelector = IHomeArbitrationProxy.receiveArbitrationFailure.selector;\\n        bytes memory data = abi.encodeWithSelector(methodSelector, _projectID);\\n        _sendMessageToChild(data);\\n\\n        emit ArbitrationCanceled(_projectID);\\n    }\\n\\n    /**\\n     * @notice Rules a specified dispute.\\n     * @param _disputeID The ID of the dispute in the ERC792 arbitrator.\\n     * @param _ruling The ruling given by the arbitrator.\\n     */\\n    function rule(uint256 _disputeID, uint256 _ruling) external override onlyArbitrator {\\n        require(_ruling <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, \\\"Invalid ruling\\\");\\n        DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[_disputeID];\\n        uint256 projectID = disputeDetails.projectID;\\n\\n        ArbitrationRequest storage arbitration = arbitrationRequests[projectID];\\n        require(arbitration.status == Status.Created, \\\"Invalid arbitration status\\\");\\n\\n        arbitration.status = Status.Ruled;\\n\\n        bytes4 methodSelector = IHomeArbitrationProxy.receiveArbitrationAnswer.selector;\\n        bytes memory data = abi.encodeWithSelector(methodSelector, projectID, _ruling);\\n        _sendMessageToChild(data);\\n\\n        emit Ruling(arbitrator, _disputeID, _ruling);\\n    }\\n\\n    /**\\n     * @notice Allows to submit evidence for a particular question.\\n     * @param _arbitrationID The ID of the arbitration related to the question.\\n     * @param _evidenceURI Link to evidence.\\n     */\\n    function submitEvidence(uint256 _arbitrationID, string calldata _evidenceURI) external {\\n        emit Evidence(arbitrator, _arbitrationID, msg.sender, _evidenceURI);\\n    }\\n\\n    /**\\n     * @notice Gets the fee to create a dispute.\\n     * @return The fee to create a dispute.\\n     */\\n    function getDisputeFee(\\n        uint256 /* _projectID */\\n    ) external view override returns (uint256) {\\n        return arbitrator.arbitrationCost(arbitratorExtraData);\\n    }\\n\\n    function _processMessageFromChild(bytes memory _data) internal override {\\n        // solhint-disable-next-line avoid-low-level-calls\\n        (bool success, ) = address(this).call(_data);\\n        require(success, \\\"Failed to call contract\\\");\\n    }\\n}\\n\",\"keccak256\":\"0xf1bbe145bf1f55d9b7e2c80bed24a401f8529b689b9483ebc44077e82d2791e2\",\"license\":\"MIT\"},\"src/dependencies/0.8.x/FxBaseRootTunnel.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport {RLPReader} from \\\"./lib/RLPReader.sol\\\";\\nimport {MerklePatriciaProof} from \\\"./lib/MerklePatriciaProof.sol\\\";\\nimport {Merkle} from \\\"./lib/Merkle.sol\\\";\\nimport \\\"./lib/ExitPayloadReader.sol\\\";\\n\\ninterface IFxStateSender {\\n    function sendMessageToChild(address _receiver, bytes calldata _data) external;\\n}\\n\\ncontract ICheckpointManager {\\n    struct HeaderBlock {\\n        bytes32 root;\\n        uint256 start;\\n        uint256 end;\\n        uint256 createdAt;\\n        address proposer;\\n    }\\n\\n    /**\\n     * @notice mapping of checkpoint header numbers to block details\\n     * @dev These checkpoints are submited by plasma contracts\\n     */\\n    mapping(uint256 => HeaderBlock) public headerBlocks;\\n}\\n\\nabstract contract FxBaseRootTunnel {\\n    using RLPReader for RLPReader.RLPItem;\\n    using Merkle for bytes32;\\n    using ExitPayloadReader for bytes;\\n    using ExitPayloadReader for ExitPayloadReader.ExitPayload;\\n    using ExitPayloadReader for ExitPayloadReader.Log;\\n    using ExitPayloadReader for ExitPayloadReader.LogTopics;\\n    using ExitPayloadReader for ExitPayloadReader.Receipt;\\n\\n    // keccak256(MessageSent(bytes))\\n    bytes32 public constant SEND_MESSAGE_EVENT_SIG = 0x8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b036;\\n\\n    // state sender contract\\n    IFxStateSender public fxRoot;\\n    // root chain manager\\n    ICheckpointManager public checkpointManager;\\n    // child tunnel contract which receives and sends messages\\n    address public fxChildTunnel;\\n\\n    // storage to avoid duplicate exits\\n    mapping(bytes32 => bool) public processedExits;\\n\\n    constructor(\\n        address _checkpointManager,\\n        address _fxRoot,\\n        address _fxChildTunnel\\n    ) {\\n        checkpointManager = ICheckpointManager(_checkpointManager);\\n        fxRoot = IFxStateSender(_fxRoot);\\n        fxChildTunnel = _fxChildTunnel;\\n    }\\n\\n    /**\\n     * @notice Send bytes message to Child Tunnel\\n     * @param message bytes message that will be sent to Child Tunnel\\n     * some message examples -\\n     *   abi.encode(tokenId);\\n     *   abi.encode(tokenId, tokenMetadata);\\n     *   abi.encode(messageType, messageData);\\n     */\\n    function _sendMessageToChild(bytes memory message) internal {\\n        fxRoot.sendMessageToChild(fxChildTunnel, message);\\n    }\\n\\n    function _validateAndExtractMessage(bytes memory inputData) internal returns (bytes memory) {\\n        ExitPayloadReader.ExitPayload memory payload = inputData.toExitPayload();\\n\\n        bytes memory branchMaskBytes = payload.getBranchMaskAsBytes();\\n        uint256 blockNumber = payload.getBlockNumber();\\n        // checking if exit has already been processed\\n        // unique exit is identified using hash of (blockNumber, branchMask, receiptLogIndex)\\n        bytes32 exitHash = keccak256(\\n            abi.encodePacked(\\n                blockNumber,\\n                // first 2 nibbles are dropped while generating nibble array\\n                // this allows branch masks that are valid but bypass exitHash check (changing first 2 nibbles only)\\n                // so converting to nibble array and then hashing it\\n                MerklePatriciaProof._getNibbleArray(branchMaskBytes),\\n                payload.getReceiptLogIndex()\\n            )\\n        );\\n        require(processedExits[exitHash] == false, \\\"FxRootTunnel: EXIT_ALREADY_PROCESSED\\\");\\n        processedExits[exitHash] = true;\\n\\n        ExitPayloadReader.Receipt memory receipt = payload.getReceipt();\\n        ExitPayloadReader.Log memory log = receipt.getLog();\\n\\n        // check child tunnel\\n        require(fxChildTunnel == log.getEmitter(), \\\"FxRootTunnel: INVALID_FX_CHILD_TUNNEL\\\");\\n\\n        bytes32 receiptRoot = payload.getReceiptRoot();\\n        // verify receipt inclusion\\n        require(\\n            MerklePatriciaProof.verify(receipt.toBytes(), branchMaskBytes, payload.getReceiptProof(), receiptRoot),\\n            \\\"FxRootTunnel: INVALID_RECEIPT_PROOF\\\"\\n        );\\n\\n        // verify checkpoint inclusion\\n        _checkBlockMembershipInCheckpoint(\\n            blockNumber,\\n            payload.getBlockTime(),\\n            payload.getTxRoot(),\\n            receiptRoot,\\n            payload.getHeaderNumber(),\\n            payload.getBlockProof()\\n        );\\n\\n        ExitPayloadReader.LogTopics memory topics = log.getTopics();\\n\\n        require(\\n            bytes32(topics.getField(0).toUint()) == SEND_MESSAGE_EVENT_SIG, // topic0 is event sig\\n            \\\"FxRootTunnel: INVALID_SIGNATURE\\\"\\n        );\\n\\n        // received message data\\n        bytes memory message = abi.decode(log.getData(), (bytes)); // event decodes params again, so decoding bytes to get message\\n        return message;\\n    }\\n\\n    function _checkBlockMembershipInCheckpoint(\\n        uint256 blockNumber,\\n        uint256 blockTime,\\n        bytes32 txRoot,\\n        bytes32 receiptRoot,\\n        uint256 headerNumber,\\n        bytes memory blockProof\\n    ) private view returns (uint256) {\\n        (bytes32 headerRoot, uint256 startBlock, , uint256 createdAt, ) = checkpointManager.headerBlocks(headerNumber);\\n\\n        require(\\n            keccak256(abi.encodePacked(blockNumber, blockTime, txRoot, receiptRoot)).checkMembership(\\n                blockNumber - startBlock,\\n                headerRoot,\\n                blockProof\\n            ),\\n            \\\"FxRootTunnel: INVALID_HEADER\\\"\\n        );\\n        return createdAt;\\n    }\\n\\n    /**\\n     * @notice receive message from  L2 to L1, validated by proof\\n     * @dev This function verifies if the transaction actually happened on child chain\\n     *\\n     * @param inputData RLP encoded data of the reference tx containing following list of fields\\n     *  0 - headerNumber - Checkpoint header block number containing the reference tx\\n     *  1 - blockProof - Proof that the block header (in the child chain) is a leaf in the submitted merkle root\\n     *  2 - blockNumber - Block number containing the reference tx on child chain\\n     *  3 - blockTime - Reference tx block time\\n     *  4 - txRoot - Transactions root of block\\n     *  5 - receiptRoot - Receipts root of block\\n     *  6 - receipt - Receipt of the reference transaction\\n     *  7 - receiptProof - Merkle proof of the reference receipt\\n     *  8 - branchMask - 32 bits denoting the path of receipt in merkle tree\\n     *  9 - receiptLogIndex - Log Index to read from the receipt\\n     */\\n    function receiveMessage(bytes memory inputData) public virtual {\\n        bytes memory message = _validateAndExtractMessage(inputData);\\n        _processMessageFromChild(message);\\n    }\\n\\n    /**\\n     * @notice Process message received from Child Tunnel\\n     * @dev function needs to be implemented to handle message as per requirement\\n     * This is called by onStateReceive function.\\n     * Since it is called via a system call, any event will not be emitted during its execution.\\n     * @param message bytes message that was sent from Child Tunnel\\n     */\\n    function _processMessageFromChild(bytes memory message) internal virtual;\\n}\\n\",\"keccak256\":\"0xe0adbfe45e6e822eed2ccbfedac68171220208020e7fc9bc1fbc048adb4f50ae\",\"license\":\"MIT\"},\"src/dependencies/0.8.x/lib/ExitPayloadReader.sol\":{\"content\":\"pragma solidity ^0.8.0;\\n\\nimport {RLPReader} from \\\"./RLPReader.sol\\\";\\n\\nlibrary ExitPayloadReader {\\n    using RLPReader for bytes;\\n    using RLPReader for RLPReader.RLPItem;\\n\\n    uint8 constant WORD_SIZE = 32;\\n\\n    struct ExitPayload {\\n        RLPReader.RLPItem[] data;\\n    }\\n\\n    struct Receipt {\\n        RLPReader.RLPItem[] data;\\n        bytes raw;\\n        uint256 logIndex;\\n    }\\n\\n    struct Log {\\n        RLPReader.RLPItem data;\\n        RLPReader.RLPItem[] list;\\n    }\\n\\n    struct LogTopics {\\n        RLPReader.RLPItem[] data;\\n    }\\n\\n    // copy paste of private copy() from RLPReader to avoid changing of existing contracts\\n    function copy(\\n        uint256 src,\\n        uint256 dest,\\n        uint256 len\\n    ) private pure {\\n        if (len == 0) return;\\n\\n        // copy as many word sizes as possible\\n        for (; len >= WORD_SIZE; len -= WORD_SIZE) {\\n            assembly {\\n                mstore(dest, mload(src))\\n            }\\n\\n            src += WORD_SIZE;\\n            dest += WORD_SIZE;\\n        }\\n\\n        // left over bytes. Mask is used to remove unwanted bytes from the word\\n        uint256 mask = 256**(WORD_SIZE - len) - 1;\\n        assembly {\\n            let srcpart := and(mload(src), not(mask)) // zero out src\\n            let destpart := and(mload(dest), mask) // retrieve the bytes\\n            mstore(dest, or(destpart, srcpart))\\n        }\\n    }\\n\\n    function toExitPayload(bytes memory data) internal pure returns (ExitPayload memory) {\\n        RLPReader.RLPItem[] memory payloadData = data.toRlpItem().toList();\\n\\n        return ExitPayload(payloadData);\\n    }\\n\\n    function getHeaderNumber(ExitPayload memory payload) internal pure returns (uint256) {\\n        return payload.data[0].toUint();\\n    }\\n\\n    function getBlockProof(ExitPayload memory payload) internal pure returns (bytes memory) {\\n        return payload.data[1].toBytes();\\n    }\\n\\n    function getBlockNumber(ExitPayload memory payload) internal pure returns (uint256) {\\n        return payload.data[2].toUint();\\n    }\\n\\n    function getBlockTime(ExitPayload memory payload) internal pure returns (uint256) {\\n        return payload.data[3].toUint();\\n    }\\n\\n    function getTxRoot(ExitPayload memory payload) internal pure returns (bytes32) {\\n        return bytes32(payload.data[4].toUint());\\n    }\\n\\n    function getReceiptRoot(ExitPayload memory payload) internal pure returns (bytes32) {\\n        return bytes32(payload.data[5].toUint());\\n    }\\n\\n    function getReceipt(ExitPayload memory payload) internal pure returns (Receipt memory receipt) {\\n        receipt.raw = payload.data[6].toBytes();\\n        RLPReader.RLPItem memory receiptItem = receipt.raw.toRlpItem();\\n\\n        if (receiptItem.isList()) {\\n            // legacy tx\\n            receipt.data = receiptItem.toList();\\n        } else {\\n            // pop first byte before parsting receipt\\n            bytes memory typedBytes = receipt.raw;\\n            bytes memory result = new bytes(typedBytes.length - 1);\\n            uint256 srcPtr;\\n            uint256 destPtr;\\n            assembly {\\n                srcPtr := add(33, typedBytes)\\n                destPtr := add(0x20, result)\\n            }\\n\\n            copy(srcPtr, destPtr, result.length);\\n            receipt.data = result.toRlpItem().toList();\\n        }\\n\\n        receipt.logIndex = getReceiptLogIndex(payload);\\n        return receipt;\\n    }\\n\\n    function getReceiptProof(ExitPayload memory payload) internal pure returns (bytes memory) {\\n        return payload.data[7].toBytes();\\n    }\\n\\n    function getBranchMaskAsBytes(ExitPayload memory payload) internal pure returns (bytes memory) {\\n        return payload.data[8].toBytes();\\n    }\\n\\n    function getBranchMaskAsUint(ExitPayload memory payload) internal pure returns (uint256) {\\n        return payload.data[8].toUint();\\n    }\\n\\n    function getReceiptLogIndex(ExitPayload memory payload) internal pure returns (uint256) {\\n        return payload.data[9].toUint();\\n    }\\n\\n    // Receipt methods\\n    function toBytes(Receipt memory receipt) internal pure returns (bytes memory) {\\n        return receipt.raw;\\n    }\\n\\n    function getLog(Receipt memory receipt) internal pure returns (Log memory) {\\n        RLPReader.RLPItem memory logData = receipt.data[3].toList()[receipt.logIndex];\\n        return Log(logData, logData.toList());\\n    }\\n\\n    // Log methods\\n    function getEmitter(Log memory log) internal pure returns (address) {\\n        return RLPReader.toAddress(log.list[0]);\\n    }\\n\\n    function getTopics(Log memory log) internal pure returns (LogTopics memory) {\\n        return LogTopics(log.list[1].toList());\\n    }\\n\\n    function getData(Log memory log) internal pure returns (bytes memory) {\\n        return log.list[2].toBytes();\\n    }\\n\\n    function toRlpBytes(Log memory log) internal pure returns (bytes memory) {\\n        return log.data.toRlpBytes();\\n    }\\n\\n    // LogTopics methods\\n    function getField(LogTopics memory topics, uint256 index) internal pure returns (RLPReader.RLPItem memory) {\\n        return topics.data[index];\\n    }\\n}\\n\",\"keccak256\":\"0xdad7c39245298184a4b1d1b47ce172405909cccb4446e0332a520862f25e426a\"},\"src/dependencies/0.8.x/lib/Merkle.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nlibrary Merkle {\\n    function checkMembership(\\n        bytes32 leaf,\\n        uint256 index,\\n        bytes32 rootHash,\\n        bytes memory proof\\n    ) internal pure returns (bool) {\\n        require(proof.length % 32 == 0, \\\"Invalid proof length\\\");\\n        uint256 proofHeight = proof.length / 32;\\n        // Proof of size n means, height of the tree is n+1.\\n        // In a tree of height n+1, max #leafs possible is 2 ^ n\\n        require(index < 2**proofHeight, \\\"Leaf index is too big\\\");\\n\\n        bytes32 proofElement;\\n        bytes32 computedHash = leaf;\\n        for (uint256 i = 32; i <= proof.length; i += 32) {\\n            assembly {\\n                proofElement := mload(add(proof, i))\\n            }\\n\\n            if (index % 2 == 0) {\\n                computedHash = keccak256(abi.encodePacked(computedHash, proofElement));\\n            } else {\\n                computedHash = keccak256(abi.encodePacked(proofElement, computedHash));\\n            }\\n\\n            index = index / 2;\\n        }\\n        return computedHash == rootHash;\\n    }\\n}\\n\",\"keccak256\":\"0x3efdfa22d02994bddb88a504ec63920018b912768ea1782f8dc09e70237060a8\",\"license\":\"MIT\"},\"src/dependencies/0.8.x/lib/MerklePatriciaProof.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport {RLPReader} from \\\"./RLPReader.sol\\\";\\n\\nlibrary MerklePatriciaProof {\\n    /*\\n     * @dev Verifies a merkle patricia proof.\\n     * @param value The terminating value in the trie.\\n     * @param encodedPath The path in the trie leading to value.\\n     * @param rlpParentNodes The rlp encoded stack of nodes.\\n     * @param root The root hash of the trie.\\n     * @return The boolean validity of the proof.\\n     */\\n    function verify(\\n        bytes memory value,\\n        bytes memory encodedPath,\\n        bytes memory rlpParentNodes,\\n        bytes32 root\\n    ) internal pure returns (bool) {\\n        RLPReader.RLPItem memory item = RLPReader.toRlpItem(rlpParentNodes);\\n        RLPReader.RLPItem[] memory parentNodes = RLPReader.toList(item);\\n\\n        bytes memory currentNode;\\n        RLPReader.RLPItem[] memory currentNodeList;\\n\\n        bytes32 nodeKey = root;\\n        uint256 pathPtr = 0;\\n\\n        bytes memory path = _getNibbleArray(encodedPath);\\n        if (path.length == 0) {\\n            return false;\\n        }\\n\\n        for (uint256 i = 0; i < parentNodes.length; i++) {\\n            if (pathPtr > path.length) {\\n                return false;\\n            }\\n\\n            currentNode = RLPReader.toRlpBytes(parentNodes[i]);\\n            if (nodeKey != keccak256(currentNode)) {\\n                return false;\\n            }\\n            currentNodeList = RLPReader.toList(parentNodes[i]);\\n\\n            if (currentNodeList.length == 17) {\\n                if (pathPtr == path.length) {\\n                    if (keccak256(RLPReader.toBytes(currentNodeList[16])) == keccak256(value)) {\\n                        return true;\\n                    } else {\\n                        return false;\\n                    }\\n                }\\n\\n                uint8 nextPathNibble = uint8(path[pathPtr]);\\n                if (nextPathNibble > 16) {\\n                    return false;\\n                }\\n                nodeKey = bytes32(RLPReader.toUintStrict(currentNodeList[nextPathNibble]));\\n                pathPtr += 1;\\n            } else if (currentNodeList.length == 2) {\\n                uint256 traversed = _nibblesToTraverse(RLPReader.toBytes(currentNodeList[0]), path, pathPtr);\\n                if (pathPtr + traversed == path.length) {\\n                    //leaf node\\n                    if (keccak256(RLPReader.toBytes(currentNodeList[1])) == keccak256(value)) {\\n                        return true;\\n                    } else {\\n                        return false;\\n                    }\\n                }\\n\\n                //extension node\\n                if (traversed == 0) {\\n                    return false;\\n                }\\n\\n                pathPtr += traversed;\\n                nodeKey = bytes32(RLPReader.toUintStrict(currentNodeList[1]));\\n            } else {\\n                return false;\\n            }\\n        }\\n    }\\n\\n    function _nibblesToTraverse(\\n        bytes memory encodedPartialPath,\\n        bytes memory path,\\n        uint256 pathPtr\\n    ) private pure returns (uint256) {\\n        uint256 len = 0;\\n        // encodedPartialPath has elements that are each two hex characters (1 byte), but partialPath\\n        // and slicedPath have elements that are each one hex character (1 nibble)\\n        bytes memory partialPath = _getNibbleArray(encodedPartialPath);\\n        bytes memory slicedPath = new bytes(partialPath.length);\\n\\n        // pathPtr counts nibbles in path\\n        // partialPath.length is a number of nibbles\\n        for (uint256 i = pathPtr; i < pathPtr + partialPath.length; i++) {\\n            bytes1 pathNibble = path[i];\\n            slicedPath[i - pathPtr] = pathNibble;\\n        }\\n\\n        if (keccak256(partialPath) == keccak256(slicedPath)) {\\n            len = partialPath.length;\\n        } else {\\n            len = 0;\\n        }\\n        return len;\\n    }\\n\\n    // bytes b must be hp encoded\\n    function _getNibbleArray(bytes memory b) internal pure returns (bytes memory) {\\n        bytes memory nibbles = \\\"\\\";\\n        if (b.length > 0) {\\n            uint8 offset;\\n            uint8 hpNibble = uint8(_getNthNibbleOfBytes(0, b));\\n            if (hpNibble == 1 || hpNibble == 3) {\\n                nibbles = new bytes(b.length * 2 - 1);\\n                bytes1 oddNibble = _getNthNibbleOfBytes(1, b);\\n                nibbles[0] = oddNibble;\\n                offset = 1;\\n            } else {\\n                nibbles = new bytes(b.length * 2 - 2);\\n                offset = 0;\\n            }\\n\\n            for (uint256 i = offset; i < nibbles.length; i++) {\\n                nibbles[i] = _getNthNibbleOfBytes(i - offset + 2, b);\\n            }\\n        }\\n        return nibbles;\\n    }\\n\\n    function _getNthNibbleOfBytes(uint256 n, bytes memory str) private pure returns (bytes1) {\\n        return bytes1(n % 2 == 0 ? uint8(str[n / 2]) / 0x10 : uint8(str[n / 2]) % 0x10);\\n    }\\n}\\n\",\"keccak256\":\"0xefa98466a4e3c85857cea4772f25f52ed61f2b90662fb6f67fb155455d644ffc\",\"license\":\"MIT\"},\"src/dependencies/0.8.x/lib/RLPReader.sol\":{\"content\":\"/*\\n * @author Hamdi Allam hamdi.allam97@gmail.com\\n * Please reach out with any questions or concerns\\n */\\npragma solidity ^0.8.0;\\n\\nlibrary RLPReader {\\n    uint8 constant STRING_SHORT_START = 0x80;\\n    uint8 constant STRING_LONG_START = 0xb8;\\n    uint8 constant LIST_SHORT_START = 0xc0;\\n    uint8 constant LIST_LONG_START = 0xf8;\\n    uint8 constant WORD_SIZE = 32;\\n\\n    struct RLPItem {\\n        uint256 len;\\n        uint256 memPtr;\\n    }\\n\\n    struct Iterator {\\n        RLPItem item; // Item that's being iterated over.\\n        uint256 nextPtr; // Position of the next item in the list.\\n    }\\n\\n    /*\\n     * @dev Returns the next element in the iteration. Reverts if it has not next element.\\n     * @param self The iterator.\\n     * @return The next element in the iteration.\\n     */\\n    function next(Iterator memory self) internal pure returns (RLPItem memory) {\\n        require(hasNext(self));\\n\\n        uint256 ptr = self.nextPtr;\\n        uint256 itemLength = _itemLength(ptr);\\n        self.nextPtr = ptr + itemLength;\\n\\n        return RLPItem(itemLength, ptr);\\n    }\\n\\n    /*\\n     * @dev Returns true if the iteration has more elements.\\n     * @param self The iterator.\\n     * @return true if the iteration has more elements.\\n     */\\n    function hasNext(Iterator memory self) internal pure returns (bool) {\\n        RLPItem memory item = self.item;\\n        return self.nextPtr < item.memPtr + item.len;\\n    }\\n\\n    /*\\n     * @param item RLP encoded bytes\\n     */\\n    function toRlpItem(bytes memory item) internal pure returns (RLPItem memory) {\\n        uint256 memPtr;\\n        assembly {\\n            memPtr := add(item, 0x20)\\n        }\\n\\n        return RLPItem(item.length, memPtr);\\n    }\\n\\n    /*\\n     * @dev Create an iterator. Reverts if item is not a list.\\n     * @param self The RLP item.\\n     * @return An 'Iterator' over the item.\\n     */\\n    function iterator(RLPItem memory self) internal pure returns (Iterator memory) {\\n        require(isList(self));\\n\\n        uint256 ptr = self.memPtr + _payloadOffset(self.memPtr);\\n        return Iterator(self, ptr);\\n    }\\n\\n    /*\\n     * @param item RLP encoded bytes\\n     */\\n    function rlpLen(RLPItem memory item) internal pure returns (uint256) {\\n        return item.len;\\n    }\\n\\n    /*\\n     * @param item RLP encoded bytes\\n     */\\n    function payloadLen(RLPItem memory item) internal pure returns (uint256) {\\n        return item.len - _payloadOffset(item.memPtr);\\n    }\\n\\n    /*\\n     * @param item RLP encoded list in bytes\\n     */\\n    function toList(RLPItem memory item) internal pure returns (RLPItem[] memory) {\\n        require(isList(item));\\n\\n        uint256 items = numItems(item);\\n        RLPItem[] memory result = new RLPItem[](items);\\n\\n        uint256 memPtr = item.memPtr + _payloadOffset(item.memPtr);\\n        uint256 dataLen;\\n        for (uint256 i = 0; i < items; i++) {\\n            dataLen = _itemLength(memPtr);\\n            result[i] = RLPItem(dataLen, memPtr);\\n            memPtr = memPtr + dataLen;\\n        }\\n\\n        return result;\\n    }\\n\\n    // @return indicator whether encoded payload is a list. negate this function call for isData.\\n    function isList(RLPItem memory item) internal pure returns (bool) {\\n        if (item.len == 0) return false;\\n\\n        uint8 byte0;\\n        uint256 memPtr = item.memPtr;\\n        assembly {\\n            byte0 := byte(0, mload(memPtr))\\n        }\\n\\n        if (byte0 < LIST_SHORT_START) return false;\\n        return true;\\n    }\\n\\n    /*\\n     * @dev A cheaper version of keccak256(toRlpBytes(item)) that avoids copying memory.\\n     * @return keccak256 hash of RLP encoded bytes.\\n     */\\n    function rlpBytesKeccak256(RLPItem memory item) internal pure returns (bytes32) {\\n        uint256 ptr = item.memPtr;\\n        uint256 len = item.len;\\n        bytes32 result;\\n        assembly {\\n            result := keccak256(ptr, len)\\n        }\\n        return result;\\n    }\\n\\n    function payloadLocation(RLPItem memory item) internal pure returns (uint256, uint256) {\\n        uint256 offset = _payloadOffset(item.memPtr);\\n        uint256 memPtr = item.memPtr + offset;\\n        uint256 len = item.len - offset; // data length\\n        return (memPtr, len);\\n    }\\n\\n    /*\\n     * @dev A cheaper version of keccak256(toBytes(item)) that avoids copying memory.\\n     * @return keccak256 hash of the item payload.\\n     */\\n    function payloadKeccak256(RLPItem memory item) internal pure returns (bytes32) {\\n        (uint256 memPtr, uint256 len) = payloadLocation(item);\\n        bytes32 result;\\n        assembly {\\n            result := keccak256(memPtr, len)\\n        }\\n        return result;\\n    }\\n\\n    /** RLPItem conversions into data types **/\\n\\n    // @returns raw rlp encoding in bytes\\n    function toRlpBytes(RLPItem memory item) internal pure returns (bytes memory) {\\n        bytes memory result = new bytes(item.len);\\n        if (result.length == 0) return result;\\n\\n        uint256 ptr;\\n        assembly {\\n            ptr := add(0x20, result)\\n        }\\n\\n        copy(item.memPtr, ptr, item.len);\\n        return result;\\n    }\\n\\n    // any non-zero byte is considered true\\n    function toBoolean(RLPItem memory item) internal pure returns (bool) {\\n        require(item.len == 1);\\n        uint256 result;\\n        uint256 memPtr = item.memPtr;\\n        assembly {\\n            result := byte(0, mload(memPtr))\\n        }\\n\\n        return result == 0 ? false : true;\\n    }\\n\\n    function toAddress(RLPItem memory item) internal pure returns (address) {\\n        // 1 byte for the length prefix\\n        require(item.len == 21);\\n\\n        return address(uint160(toUint(item)));\\n    }\\n\\n    function toUint(RLPItem memory item) internal pure returns (uint256) {\\n        require(item.len > 0 && item.len <= 33);\\n\\n        uint256 offset = _payloadOffset(item.memPtr);\\n        uint256 len = item.len - offset;\\n\\n        uint256 result;\\n        uint256 memPtr = item.memPtr + offset;\\n        assembly {\\n            result := mload(memPtr)\\n\\n            // shfit to the correct location if neccesary\\n            if lt(len, 32) {\\n                result := div(result, exp(256, sub(32, len)))\\n            }\\n        }\\n\\n        return result;\\n    }\\n\\n    // enforces 32 byte length\\n    function toUintStrict(RLPItem memory item) internal pure returns (uint256) {\\n        // one byte prefix\\n        require(item.len == 33);\\n\\n        uint256 result;\\n        uint256 memPtr = item.memPtr + 1;\\n        assembly {\\n            result := mload(memPtr)\\n        }\\n\\n        return result;\\n    }\\n\\n    function toBytes(RLPItem memory item) internal pure returns (bytes memory) {\\n        require(item.len > 0);\\n\\n        uint256 offset = _payloadOffset(item.memPtr);\\n        uint256 len = item.len - offset; // data length\\n        bytes memory result = new bytes(len);\\n\\n        uint256 destPtr;\\n        assembly {\\n            destPtr := add(0x20, result)\\n        }\\n\\n        copy(item.memPtr + offset, destPtr, len);\\n        return result;\\n    }\\n\\n    /*\\n     * Private Helpers\\n     */\\n\\n    // @return number of payload items inside an encoded list.\\n    function numItems(RLPItem memory item) private pure returns (uint256) {\\n        if (item.len == 0) return 0;\\n\\n        uint256 count = 0;\\n        uint256 currPtr = item.memPtr + _payloadOffset(item.memPtr);\\n        uint256 endPtr = item.memPtr + item.len;\\n        while (currPtr < endPtr) {\\n            currPtr = currPtr + _itemLength(currPtr); // skip over an item\\n            count++;\\n        }\\n\\n        return count;\\n    }\\n\\n    // @return entire rlp item byte length\\n    function _itemLength(uint256 memPtr) private pure returns (uint256) {\\n        uint256 itemLen;\\n        uint256 byte0;\\n        assembly {\\n            byte0 := byte(0, mload(memPtr))\\n        }\\n\\n        if (byte0 < STRING_SHORT_START) itemLen = 1;\\n        else if (byte0 < STRING_LONG_START) itemLen = byte0 - STRING_SHORT_START + 1;\\n        else if (byte0 < LIST_SHORT_START) {\\n            assembly {\\n                let byteLen := sub(byte0, 0xb7) // # of bytes the actual length is\\n                memPtr := add(memPtr, 1) // skip over the first byte\\n                /* 32 byte word size */\\n                let dataLen := div(mload(memPtr), exp(256, sub(32, byteLen))) // right shifting to get the len\\n                itemLen := add(dataLen, add(byteLen, 1))\\n            }\\n        } else if (byte0 < LIST_LONG_START) {\\n            itemLen = byte0 - LIST_SHORT_START + 1;\\n        } else {\\n            assembly {\\n                let byteLen := sub(byte0, 0xf7)\\n                memPtr := add(memPtr, 1)\\n\\n                let dataLen := div(mload(memPtr), exp(256, sub(32, byteLen))) // right shifting to the correct length\\n                itemLen := add(dataLen, add(byteLen, 1))\\n            }\\n        }\\n\\n        return itemLen;\\n    }\\n\\n    // @return number of bytes until the data\\n    function _payloadOffset(uint256 memPtr) private pure returns (uint256) {\\n        uint256 byte0;\\n        assembly {\\n            byte0 := byte(0, mload(memPtr))\\n        }\\n\\n        if (byte0 < STRING_SHORT_START) return 0;\\n        else if (byte0 < STRING_LONG_START || (byte0 >= LIST_SHORT_START && byte0 < LIST_LONG_START)) return 1;\\n        else if (byte0 < LIST_SHORT_START)\\n            // being explicit\\n            return byte0 - (STRING_LONG_START - 1) + 1;\\n        else return byte0 - (LIST_LONG_START - 1) + 1;\\n    }\\n\\n    /*\\n     * @param src Pointer to source\\n     * @param dest Pointer to destination\\n     * @param len Amount of memory to copy from the source\\n     */\\n    function copy(\\n        uint256 src,\\n        uint256 dest,\\n        uint256 len\\n    ) private pure {\\n        if (len == 0) return;\\n\\n        // copy as many word sizes as possible\\n        for (; len >= WORD_SIZE; len -= WORD_SIZE) {\\n            assembly {\\n                mstore(dest, mload(src))\\n            }\\n\\n            src += WORD_SIZE;\\n            dest += WORD_SIZE;\\n        }\\n\\n        if (len == 0) return;\\n\\n        // left over bytes. Mask is used to remove unwanted bytes from the word\\n        uint256 mask = 256**(WORD_SIZE - len) - 1;\\n\\n        assembly {\\n            let srcpart := and(mload(src), not(mask)) // zero out src\\n            let destpart := and(mload(dest), mask) // retrieve the bytes\\n            mstore(dest, or(destpart, srcpart))\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x16e8cbf7c2a240044182576be529be0fa666ce0cdec46be3ff76d40491362a80\"}},\"version\":1}",
+  "bytecode": "0x60a06040523480156200001157600080fd5b506040516200323b3803806200323b833981016040819052620000349162000293565b600180546001600160a01b03808a166001600160a01b03199283161790925560008054838a169083161790556002805483891692169190911790558416608052825162000089906004906020860190620000e8565b5080516200009f906005906020840190620000e8565b5060007f61606860eb6c87306811e2695215385101daab53bd6ab4e9f9049aead9363c7d83604051620000d3919062000375565b60405180910390a250505050505050620003e7565b828054620000f690620003aa565b90600052602060002090601f0160209004810192826200011a576000855562000165565b82601f106200013557805160ff191683800117855562000165565b8280016001018555821562000165579182015b828111156200016557825182559160200191906001019062000148565b506200017392915062000177565b5090565b5b8082111562000173576000815560010162000178565b6001600160a01b0381168114620001a457600080fd5b50565b8051620001b4816200018e565b919050565b634e487b7160e01b600052604160045260246000fd5b60005b83811015620001ec578181015183820152602001620001d2565b83811115620001fc576000848401525b50505050565b600082601f8301126200021457600080fd5b81516001600160401b0380821115620002315762000231620001b9565b604051601f8301601f19908116603f011681019082821181831017156200025c576200025c620001b9565b816040528381528660208588010111156200027657600080fd5b62000289846020830160208901620001cf565b9695505050505050565b600080600080600080600060e0888a031215620002af57600080fd5b8751620002bc816200018e565b6020890151909750620002cf816200018e565b9550620002df60408901620001a7565b9450620002ef60608901620001a7565b60808901519094506001600160401b03808211156200030d57600080fd5b6200031b8b838c0162000202565b945060a08a01519150808211156200033257600080fd5b620003408b838c0162000202565b935060c08a01519150808211156200035757600080fd5b50620003668a828b0162000202565b91505092959891949750929550565b602081526000825180602084015262000396816040850160208701620001cf565b601f01601f19169190910160400192915050565b600181811c90821680620003bf57607f821691505b60208210811415620003e157634e487b7160e01b600052602260045260246000fd5b50919050565b608051612e006200043b6000396000818161030f0152818161051f01528181610680015281816108b50152818161096a01528181610af501528181610b9e01528181610d0d0152610e910152612e006000f3fe60806040526004361061012a5760003560e01c8063649d4d26116100ab578063a6a7f0eb1161006f578063a6a7f0eb146103ac578063bde80ca7146103cc578063c0857ba0146103f9578063d5b4c69414610419578063de9b771f14610439578063f953cec71461045957600080fd5b8063649d4d26146102dd5780636cc6cde1146102fd5780638599a7391461034957806395125f701461035c578063972c49281461038c57600080fd5b806348a5b2b3116100f257806348a5b2b3146101e857806354dba90f146102085780636059319e1461021d578063607f2d421461023d578063631eabd51461027d57600080fd5b80630c7ac7b61461012f5780630e387de61461015a5780630fa8c7ce1461019c5780631e117f49146101b1578063311a6c56146101c6575b600080fd5b34801561013b57600080fd5b50610144610479565b60405161015191906126ca565b60405180910390f35b34801561016657600080fd5b5061018e7f8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b03681565b604051908152602001610151565b3480156101a857600080fd5b5061018e600281565b3480156101bd57600080fd5b50610144610507565b3480156101d257600080fd5b506101e66101e13660046126dd565b610514565b005b3480156101f457600080fd5b506101e66102033660046126ff565b6106ea565b34801561021457600080fd5b5061018e600081565b34801561022957600080fd5b506101e66102383660046126ff565b610809565b34801561024957600080fd5b5061026d6102583660046126ff565b60036020526000908152604090205460ff1681565b6040519015158152602001610151565b34801561028957600080fd5b506102ce6102983660046126ff565b6006602052600090815260409020805460019091015460ff82169161010090046001600160f81b0316906001600160a01b031683565b6040516101519392919061272e565b3480156102e957600080fd5b5061018e6102f83660046126ff565b610b84565b34801561030957600080fd5b506103317f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b039091168152602001610151565b6101e66103573660046126ff565b610c29565b34801561036857600080fd5b5061026d6103773660046126ff565b60086020526000908152604090205460ff1681565b34801561039857600080fd5b50600254610331906001600160a01b031681565b3480156103b857600080fd5b506101e66103c7366004612776565b610e84565b3480156103d857600080fd5b5061018e6103e73660046126ff565b60076020526000908152604090205481565b34801561040557600080fd5b50600154610331906001600160a01b031681565b34801561042557600080fd5b506101e66104343660046126ff565b610ef7565b34801561044557600080fd5b50600054610331906001600160a01b031681565b34801561046557600080fd5b506101e6610474366004612861565b611010565b60048054610486906128e1565b80601f01602080910402602001604051908101604052809291908181526020018280546104b2906128e1565b80156104ff5780601f106104d4576101008083540402835291602001916104ff565b820191906000526020600020905b8154815290600101906020018083116104e257829003601f168201915b505050505081565b60058054610486906128e1565b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146105915760405162461bcd60e51b815260206004820152601760248201527f4f6e6c792061726269747261746f7220616c6c6f77656400000000000000000060448201526064015b60405180910390fd5b60028111156105d35760405162461bcd60e51b815260206004820152600e60248201526d496e76616c69642072756c696e6760901b6044820152606401610588565b60008281526007602090815260408083208054808552600690935292206002815460ff16600481111561060857610608612718565b146106255760405162461bcd60e51b815260040161058890612916565b805460ff1916600317815560408051602481018490526044808201879052825180830390910181526064909101909152602081018051636146a07b60e01b6001600160e01b0390911681179091529061067d8161102a565b867f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03167f394027a5fa6e098a1191094d1719d6929b9abc535fcc0c8f448d6a4e75622276886040516106d991815260200190565b60405180910390a350505050505050565b3330146107395760405162461bcd60e51b815260206004820152601d60248201527f43616e206f6e6c792062652063616c6c656420766961206272696467650000006044820152606401610588565b60008181526006602052604090206001815460ff16600481111561075f5761075f612718565b1461077c5760405162461bcd60e51b815260040161058890612916565b8054600083815260066020526040808220828155600190810180546001600160a01b031916905584015490516101009093046001600160f81b0316926001600160a01b03909116916108fc841502918491818181858888f150506040518693507f841d361c2e9b919234bea88e56ddd3de1314046ccf176d49c24a3c3df788e9a0925060009150a2505050565b3330146108585760405162461bcd60e51b815260206004820152601d60248201527f43616e206f6e6c792062652063616c6c656420766961206272696467650000006044820152606401610588565b60008181526006602052604090206001815460ff16600481111561087e5761087e612718565b1461089b5760405162461bcd60e51b815260040161058890612916565b60405163f7434ea960e01b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f7434ea9906108ea9060049081016129ed565b60206040518083038186803b15801561090257600080fd5b505afa158015610916573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061093a9190612a00565b825490915061010090046001600160f81b03168111610b495760405163c13517e160e01b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063c13517e19083906109a4906002906004908101612a19565b6020604051808303818588803b1580156109bd57600080fd5b505af1935050505080156109ee575060408051601f3d908101601f191682019092526109eb91810190612a00565b60015b610a2d57815460ff1916600417825560405183907f794bcf8358ec9066a41460c1fa506e1679707b1b1123e1ddc7f2fd601ff3c70490600090a2505050565b600081815260076020908152604080832087815587845260089092528220805460ff191660011790558454909190610a759085906001600160f81b0361010090910416612a48565b6002865590508015610aad5760018501546040516001600160a01b039091169082156108fc029083906000818181858888f150505050505b604051839087907fd77ab978e3c3b4dbb04a8e8d23b2964df32870f5527cd1ffd8b11610fffade4790600090a360408051600081526020810188905284916001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016917f74baab670a4015ab2f1b467c5252a96141a2573f2908e58a92081e80d3cfde3d910160405180910390a3505050505050565b815460ff1916600417825560405183907f794bcf8358ec9066a41460c1fa506e1679707b1b1123e1ddc7f2fd601ff3c70490600090a2505050565b60405163f7434ea960e01b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f7434ea990610bd39060049081016129ed565b60206040518083038186803b158015610beb57600080fd5b505afa158015610bff573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610c239190612a00565b92915050565b60008181526008602052604090205460ff1615610c815760405162461bcd60e51b81526020600482015260166024820152754469737075746520616c72656164792065786973747360501b6044820152606401610588565b600081815260066020526040812090815460ff166004811115610ca657610ca6612718565b14610cf35760405162461bcd60e51b815260206004820152601d60248201527f4172626974726174696f6e20616c7265616479207265717565737465640000006044820152606401610588565b60405163f7434ea960e01b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f7434ea990610d429060049081016129ed565b60206040518083038186803b158015610d5a57600080fd5b505afa158015610d6e573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610d929190612a00565b905080341015610ddc5760405162461bcd60e51b81526020600482015260156024820152744465706f7369742076616c756520746f6f206c6f7760581b6044820152606401610588565b6001610100346001600160f81b0316028117835582018054336001600160a01b0319909116811790915560408051602481018690526044808201939093528151808203909301835260640190526020810180516001600160e01b0316634f92e44d60e11b90811790915290610e508161102a565b604051339086907fbeb7c7ca9632eceb7faaaf69b98051a5edd2a3930327b96316c86cb5dc8cb0a690600090a35050505050565b336001600160a01b0316837f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03167fdccf2f8b2cc26eafcd61905cba744cff4b81d14740725f6376390dc6298a6a3c8585604051610eea929190612a5f565b60405180910390a4505050565b60008181526006602052604090206004815460ff166004811115610f1d57610f1d612718565b14610f3a5760405162461bcd60e51b815260040161058890612916565b8054600083815260066020526040808220828155600190810180546001600160a01b031916905584015490516101009093046001600160f81b0316926001600160a01b03909116916108fc841502918491818181858888f150506040805160248082018990528251808303909101815260449091019091526020810180516001600160e01b03166302a67b3d60e51b90811790915293509150610fde90508161102a565b60405185907f841d361c2e9b919234bea88e56ddd3de1314046ccf176d49c24a3c3df788e9a090600090a25050505050565b600061101b82611095565b90506110268161137b565b5050565b60005460025460405163b472047760e01b81526001600160a01b039283169263b472047792611060929116908590600401612a8e565b600060405180830381600087803b15801561107a57600080fd5b505af115801561108e573d6000803e3d6000fd5b5050505050565b606060006110a283611428565b905060006110af82611487565b905060006110bc836114b0565b90506000816110ca846114d9565b6110d386611697565b6040516020016110e593929190612ab2565b60408051601f1981840301815291815281516020928301206000818152600390935291205490915060ff16156111695760405162461bcd60e51b8152602060048201526024808201527f4678526f6f7454756e6e656c3a20455849545f414c52454144595f50524f434560448201526314d4d15160e21b6064820152608401610588565b6000818152600360205260408120805460ff1916600117905561118b856116b3565b90506000611198826117fd565b90506111a38161188d565b6002546001600160a01b0390811691161461120e5760405162461bcd60e51b815260206004820152602560248201527f4678526f6f7454756e6e656c3a20494e56414c49445f46585f4348494c445f54604482015264155393915360da1b6064820152608401610588565b6000611219876118b6565b9050611239611229846020015190565b876112338a6118d2565b846118ee565b6112915760405162461bcd60e51b815260206004820152602360248201527f4678526f6f7454756e6e656c3a20494e56414c49445f524543454950545f505260448201526227a7a360e91b6064820152608401610588565b6112bf8561129e89611ba5565b6112a78a611bc1565b846112b18c611bdd565b6112ba8d611bf9565b611c15565b5060006112cb83611d4a565b90507f8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b0366113016112fc836000611d86565b611dbe565b1461134e5760405162461bcd60e51b815260206004820152601f60248201527f4678526f6f7454756e6e656c3a20494e56414c49445f5349474e4154555245006044820152606401610588565b600061135984611e39565b80602001905181019061136c9190612adf565b9b9a5050505050505050505050565b6000306001600160a01b0316826040516113959190612b56565b6000604051808303816000865af19150503d80600081146113d2576040519150601f19603f3d011682016040523d82523d6000602084013e6113d7565b606091505b50509050806110265760405162461bcd60e51b815260206004820152601760248201527f4661696c656420746f2063616c6c20636f6e74726163740000000000000000006044820152606401610588565b604080516020810190915260608152600061147261146d8460408051808201825260008082526020918201528151808301909252825182529182019181019190915290565b611e55565b60408051602081019091529081529392505050565b6060610c2382600001516008815181106114a3576114a3612b72565b6020026020010151611f6b565b6000610c2382600001516002815181106114cc576114cc612b72565b6020026020010151611dbe565b60408051602081019091526000815281516060919015610c2357600080611501600086612008565b60f81c9050600181148061151857508060ff166003145b156115c05760018551600261152d9190612b88565b6115379190612a48565b67ffffffffffffffff81111561154f5761154f6127f2565b6040519080825280601f01601f191660200182016040528015611579576020820181803683370190505b5092506000611589600187612008565b9050808460008151811061159f5761159f612b72565b60200101906001600160f81b031916908160001a9053506001925050611624565b6002855160026115d09190612b88565b6115da9190612a48565b67ffffffffffffffff8111156115f2576115f26127f2565b6040519080825280601f01601f19166020018201604052801561161c576020820181803683370190505b509250600091505b60ff82165b835181101561168e5761165361164260ff851683612a48565b61164d906002612ba7565b87612008565b84828151811061166557611665612b72565b60200101906001600160f81b031916908160001a9053508061168681612bbf565b915050611629565b50505092915050565b6000610c2382600001516009815181106114cc576114cc612b72565b6116d760405180606001604052806060815260200160608152602001600081525090565b6116f182600001516006815181106114a3576114a3612b72565b60208281018290526040805180820182526000808252908301528051808201909152825181529181019082015261172781612089565b1561173c5761173581611e55565b82526117e9565b6020820151805160009061175290600190612a48565b67ffffffffffffffff81111561176a5761176a6127f2565b6040519080825280601f01601f191660200182016040528015611794576020820181803683370190505b5090506000808360210191508260200190506117b2828285516120c2565b6040805180820182526000808252602091820152815180830190925284518252808501908201526117e290611e55565b8652505050505b6117f283611697565b604083015250919050565b60408051608081018252600091810182815260608083019390935281526020810191909152600061184b836000015160038151811061183e5761183e612b72565b6020026020010151611e55565b83604001518151811061186057611860612b72565b60200260200101519050604051806040016040528082815260200161188483611e55565b90529392505050565b6000610c2382602001516000815181106118a9576118a9612b72565b602002602001015161213d565b6000610c2382600001516005815181106114cc576114cc612b72565b6060610c2382600001516007815181106114a3576114a3612b72565b6000806119228460408051808201825260008082526020918201528151808301909252825182529182019181019190915290565b9050600061192f82611e55565b9050606080856000806119418b6114d9565b905080516000141561195d576000975050505050505050611b9d565b60005b8651811015611b9457815183111561198357600098505050505050505050611b9d565b6119a587828151811061199857611998612b72565b6020026020010151612157565b9550858051906020012084146119c657600098505050505050505050611b9d565b6119db87828151811061183e5761183e612b72565b9450845160111415611ab0578151831415611a3d578c80519060200120611a0e866010815181106114a3576114a3612b72565b805190602001201415611a2c57600198505050505050505050611b9d565b600098505050505050505050611b9d565b6000828481518110611a5157611a51612b72565b016020015160f81c90506010811115611a765760009950505050505050505050611b9d565b611a9b868260ff1681518110611a8e57611a8e612b72565b60200260200101516121d7565b9450611aa8600185612ba7565b935050611b82565b845160021415611a2c576000611adc611ad5876000815181106114a3576114a3612b72565b8486612205565b8351909150611aeb8286612ba7565b1415611b40578d80519060200120611b0f876001815181106114a3576114a3612b72565b805190602001201415611b2e5760019950505050505050505050611b9d565b60009950505050505050505050611b9d565b80611b575760009950505050505050505050611b9d565b611b618185612ba7565b9350611b7986600181518110611a8e57611a8e612b72565b9450611b829050565b80611b8c81612bbf565b915050611960565b50505050505050505b949350505050565b6000610c2382600001516003815181106114cc576114cc612b72565b6000610c2382600001516004815181106114cc576114cc612b72565b6000610c2382600001516000815181106114cc576114cc612b72565b6060610c2382600001516001815181106114a3576114a3612b72565b6001546040516320a9cea560e11b8152600481018490526000918291829182916001600160a01b03909116906341539d4a9060240160a06040518083038186803b158015611c6257600080fd5b505afa158015611c76573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611c9a9190612bda565b5093505092509250611cf1828b611cb19190612a48565b6040805160208082018f90528183018e9052606082018d905260808083018d90528351808403909101815260a0909201909252805191012090858861230e565b611d3d5760405162461bcd60e51b815260206004820152601c60248201527f4678526f6f7454756e6e656c3a20494e56414c49445f484541444552000000006044820152606401610588565b9998505050505050505050565b6040805160208101909152606081526040518060200160405280611d7e846020015160018151811061183e5761183e612b72565b905292915050565b60408051808201909152600080825260208201528251805183908110611dae57611dae612b72565b6020026020010151905092915050565b805160009015801590611dd357508151602110155b611ddc57600080fd5b6000611deb8360200151612473565b90506000818460000151611dff9190612a48565b9050600080838660200151611e149190612ba7565b9050805191506020831015611e3057826020036101000a820491505b50949350505050565b6060610c2382602001516002815181106114a3576114a3612b72565b6060611e6082612089565b611e6957600080fd5b6000611e74836124fb565b905060008167ffffffffffffffff811115611e9157611e916127f2565b604051908082528060200260200182016040528015611ed657816020015b6040805180820190915260008082526020820152815260200190600190039081611eaf5790505b5090506000611ee88560200151612473565b8560200151611ef79190612ba7565b90506000805b84811015611f6057611f0e8361257e565b9150604051806040016040528083815260200184815250848281518110611f3757611f37612b72565b6020908102919091010152611f4c8284612ba7565b925080611f5881612bbf565b915050611efd565b509195945050505050565b8051606090611f7957600080fd5b6000611f888360200151612473565b90506000818460000151611f9c9190612a48565b905060008167ffffffffffffffff811115611fb957611fb96127f2565b6040519080825280601f01601f191660200182016040528015611fe3576020820181803683370190505b5090506000816020019050611e308487602001516120019190612ba7565b8285612622565b6000612015600284612c4b565b1561204f57601082612028600286612c5f565b8151811061203857612038612b72565b016020015161204a919060f81c612c73565b61207f565b60108261205d600286612c5f565b8151811061206d5761206d612b72565b016020015161207f919060f81c612c95565b60f81b9392505050565b805160009061209a57506000919050565b6020820151805160001a9060c08210156120b8575060009392505050565b5060019392505050565b806120cc57505050565b6020811061210457825182526120e3602084612ba7565b92506120f0602083612ba7565b91506120fd602082612a48565b90506120cc565b60006001612113836020612a48565b61211f90610100612d9b565b6121299190612a48565b935183518516941916939093179091525050565b805160009060151461214e57600080fd5b610c2382611dbe565b60606000826000015167ffffffffffffffff811115612178576121786127f2565b6040519080825280601f01601f1916602001820160405280156121a2576020820181803683370190505b5090508051600014156121b55792915050565b60008160200190506121d08460200151828660000151612622565b5092915050565b80516000906021146121e857600080fd5b600080836020015160016121fc9190612ba7565b51949350505050565b60008080612212866114d9565b90506000815167ffffffffffffffff811115612230576122306127f2565b6040519080825280601f01601f19166020018201604052801561225a576020820181803683370190505b509050845b825161226b9087612ba7565b8110156122de57600087828151811061228657612286612b72565b01602001516001600160f81b031916905080836122a38985612a48565b815181106122b3576122b3612b72565b60200101906001600160f81b031916908160001a9053505080806122d690612bbf565b91505061225f565b508080519060200120828051906020012014156122fe5781519250612303565b600092505b509095945050505050565b60006020825161231e9190612c4b565b156123625760405162461bcd60e51b8152602060048201526014602482015273092dcecc2d8d2c840e0e4dedecc40d8cadccee8d60631b6044820152606401610588565b6000602083516123729190612c5f565b905061237f816002612d9b565b85106123c55760405162461bcd60e51b81526020600482015260156024820152744c65616620696e64657820697320746f6f2062696760581b6044820152606401610588565b60008660205b85518111612465578581015192506123e4600289612c4b565b612419576040805160208101849052908101849052606001604051602081830303815290604052805190602001209150612446565b60408051602081018590529081018390526060016040516020818303038152906040528051906020012091505b612451600289612c5f565b975061245e602082612ba7565b90506123cb565b509094149695505050505050565b8051600090811a608081101561248c5750600092915050565b60b88110806124a7575060c081108015906124a7575060f881105b156124b55750600192915050565b60c08110156124e9576124ca600160b8612da7565b6124d79060ff1682612a48565b6124e2906001612ba7565b9392505050565b6124ca600160f8612da7565b50919050565b805160009061250c57506000919050565b60008061251c8460200151612473565b846020015161252b9190612ba7565b90506000846000015185602001516125439190612ba7565b90505b80821015612575576125578261257e565b6125619083612ba7565b91508261256d81612bbf565b935050612546565b50909392505050565b80516000908190811a608081101561259957600191506121d0565b60b88110156125bf576125ad608082612a48565b6125b8906001612ba7565b91506121d0565b60c08110156125ec5760b78103600185019450806020036101000a855104600182018101935050506121d0565b60f8811015612600576125ad60c082612a48565b60019390930151602084900360f7016101000a900490920160f5190192915050565b8061262c57505050565b602081106126645782518252612643602084612ba7565b9250612650602083612ba7565b915061265d602082612a48565b905061262c565b8061210457505050565b60005b83811015612689578181015183820152602001612671565b83811115612698576000848401525b50505050565b600081518084526126b681602086016020860161266e565b601f01601f19169290920160200192915050565b6020815260006124e2602083018461269e565b600080604083850312156126f057600080fd5b50508035926020909101359150565b60006020828403121561271157600080fd5b5035919050565b634e487b7160e01b600052602160045260246000fd5b606081016005851061275057634e487b7160e01b600052602160045260246000fd5b9381526001600160f81b039290921660208301526001600160a01b031660409091015290565b60008060006040848603121561278b57600080fd5b83359250602084013567ffffffffffffffff808211156127aa57600080fd5b818601915086601f8301126127be57600080fd5b8135818111156127cd57600080fd5b8760208285010111156127df57600080fd5b6020830194508093505050509250925092565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f1916810167ffffffffffffffff81118282101715612831576128316127f2565b604052919050565b600067ffffffffffffffff821115612853576128536127f2565b50601f01601f191660200190565b60006020828403121561287357600080fd5b813567ffffffffffffffff81111561288a57600080fd5b8201601f8101841361289b57600080fd5b80356128ae6128a982612839565b612808565b8181528560208385010111156128c357600080fd5b81602084016020830137600091810160200191909152949350505050565b600181811c908216806128f557607f821691505b602082108114156124f557634e487b7160e01b600052602260045260246000fd5b6020808252601a908201527f496e76616c6964206172626974726174696f6e20737461747573000000000000604082015260600190565b8054600090600181811c908083168061296757607f831692505b602080841082141561298957634e487b7160e01b600052602260045260246000fd5b838852602088018280156129a457600181146129b5576129e0565b60ff198716825282820197506129e0565b60008981526020902060005b878110156129da578154848201529086019084016129c1565b83019850505b5050505050505092915050565b6020815260006124e2602083018461294d565b600060208284031215612a1257600080fd5b5051919050565b828152604060208201526000611b9d604083018461294d565b634e487b7160e01b600052601160045260246000fd5b600082821015612a5a57612a5a612a32565b500390565b60208152816020820152818360408301376000818301604090810191909152601f909201601f19160101919050565b6001600160a01b0383168152604060208201819052600090611b9d9083018461269e565b83815260008351612aca81602085016020880161266e565b60209201918201929092526040019392505050565b600060208284031215612af157600080fd5b815167ffffffffffffffff811115612b0857600080fd5b8201601f81018413612b1957600080fd5b8051612b276128a982612839565b818152856020838501011115612b3c57600080fd5b612b4d82602083016020860161266e565b95945050505050565b60008251612b6881846020870161266e565b9190910192915050565b634e487b7160e01b600052603260045260246000fd5b6000816000190483118215151615612ba257612ba2612a32565b500290565b60008219821115612bba57612bba612a32565b500190565b6000600019821415612bd357612bd3612a32565b5060010190565b600080600080600060a08688031215612bf257600080fd5b855160208701516040880151606089015160808a0151939850919650945092506001600160a01b0381168114612c2757600080fd5b809150509295509295909350565b634e487b7160e01b600052601260045260246000fd5b600082612c5a57612c5a612c35565b500690565b600082612c6e57612c6e612c35565b500490565b600060ff831680612c8657612c86612c35565b8060ff84160691505092915050565b600060ff831680612ca857612ca8612c35565b8060ff84160491505092915050565b600181815b80851115612cf2578160001904821115612cd857612cd8612a32565b80851615612ce557918102915b93841c9390800290612cbc565b509250929050565b600082612d0957506001610c23565b81612d1657506000610c23565b8160018114612d2c5760028114612d3657612d52565b6001915050610c23565b60ff841115612d4757612d47612a32565b50506001821b610c23565b5060208310610133831016604e8410600b8410161715612d75575081810a610c23565b612d7f8383612cb7565b8060001904821115612d9357612d93612a32565b029392505050565b60006124e28383612cfa565b600060ff821660ff841680821015612dc157612dc1612a32565b9003939250505056fea2646970667358221220ccd65bee3a0d1dd9a09554c69a9692dcf06f3089656eb459ad190d13703b636464736f6c63430008090033",
+  "deployedBytecode": "0x60806040526004361061012a5760003560e01c8063649d4d26116100ab578063a6a7f0eb1161006f578063a6a7f0eb146103ac578063bde80ca7146103cc578063c0857ba0146103f9578063d5b4c69414610419578063de9b771f14610439578063f953cec71461045957600080fd5b8063649d4d26146102dd5780636cc6cde1146102fd5780638599a7391461034957806395125f701461035c578063972c49281461038c57600080fd5b806348a5b2b3116100f257806348a5b2b3146101e857806354dba90f146102085780636059319e1461021d578063607f2d421461023d578063631eabd51461027d57600080fd5b80630c7ac7b61461012f5780630e387de61461015a5780630fa8c7ce1461019c5780631e117f49146101b1578063311a6c56146101c6575b600080fd5b34801561013b57600080fd5b50610144610479565b60405161015191906126ca565b60405180910390f35b34801561016657600080fd5b5061018e7f8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b03681565b604051908152602001610151565b3480156101a857600080fd5b5061018e600281565b3480156101bd57600080fd5b50610144610507565b3480156101d257600080fd5b506101e66101e13660046126dd565b610514565b005b3480156101f457600080fd5b506101e66102033660046126ff565b6106ea565b34801561021457600080fd5b5061018e600081565b34801561022957600080fd5b506101e66102383660046126ff565b610809565b34801561024957600080fd5b5061026d6102583660046126ff565b60036020526000908152604090205460ff1681565b6040519015158152602001610151565b34801561028957600080fd5b506102ce6102983660046126ff565b6006602052600090815260409020805460019091015460ff82169161010090046001600160f81b0316906001600160a01b031683565b6040516101519392919061272e565b3480156102e957600080fd5b5061018e6102f83660046126ff565b610b84565b34801561030957600080fd5b506103317f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b039091168152602001610151565b6101e66103573660046126ff565b610c29565b34801561036857600080fd5b5061026d6103773660046126ff565b60086020526000908152604090205460ff1681565b34801561039857600080fd5b50600254610331906001600160a01b031681565b3480156103b857600080fd5b506101e66103c7366004612776565b610e84565b3480156103d857600080fd5b5061018e6103e73660046126ff565b60076020526000908152604090205481565b34801561040557600080fd5b50600154610331906001600160a01b031681565b34801561042557600080fd5b506101e66104343660046126ff565b610ef7565b34801561044557600080fd5b50600054610331906001600160a01b031681565b34801561046557600080fd5b506101e6610474366004612861565b611010565b60048054610486906128e1565b80601f01602080910402602001604051908101604052809291908181526020018280546104b2906128e1565b80156104ff5780601f106104d4576101008083540402835291602001916104ff565b820191906000526020600020905b8154815290600101906020018083116104e257829003601f168201915b505050505081565b60058054610486906128e1565b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146105915760405162461bcd60e51b815260206004820152601760248201527f4f6e6c792061726269747261746f7220616c6c6f77656400000000000000000060448201526064015b60405180910390fd5b60028111156105d35760405162461bcd60e51b815260206004820152600e60248201526d496e76616c69642072756c696e6760901b6044820152606401610588565b60008281526007602090815260408083208054808552600690935292206002815460ff16600481111561060857610608612718565b146106255760405162461bcd60e51b815260040161058890612916565b805460ff1916600317815560408051602481018490526044808201879052825180830390910181526064909101909152602081018051636146a07b60e01b6001600160e01b0390911681179091529061067d8161102a565b867f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03167f394027a5fa6e098a1191094d1719d6929b9abc535fcc0c8f448d6a4e75622276886040516106d991815260200190565b60405180910390a350505050505050565b3330146107395760405162461bcd60e51b815260206004820152601d60248201527f43616e206f6e6c792062652063616c6c656420766961206272696467650000006044820152606401610588565b60008181526006602052604090206001815460ff16600481111561075f5761075f612718565b1461077c5760405162461bcd60e51b815260040161058890612916565b8054600083815260066020526040808220828155600190810180546001600160a01b031916905584015490516101009093046001600160f81b0316926001600160a01b03909116916108fc841502918491818181858888f150506040518693507f841d361c2e9b919234bea88e56ddd3de1314046ccf176d49c24a3c3df788e9a0925060009150a2505050565b3330146108585760405162461bcd60e51b815260206004820152601d60248201527f43616e206f6e6c792062652063616c6c656420766961206272696467650000006044820152606401610588565b60008181526006602052604090206001815460ff16600481111561087e5761087e612718565b1461089b5760405162461bcd60e51b815260040161058890612916565b60405163f7434ea960e01b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f7434ea9906108ea9060049081016129ed565b60206040518083038186803b15801561090257600080fd5b505afa158015610916573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061093a9190612a00565b825490915061010090046001600160f81b03168111610b495760405163c13517e160e01b81526001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063c13517e19083906109a4906002906004908101612a19565b6020604051808303818588803b1580156109bd57600080fd5b505af1935050505080156109ee575060408051601f3d908101601f191682019092526109eb91810190612a00565b60015b610a2d57815460ff1916600417825560405183907f794bcf8358ec9066a41460c1fa506e1679707b1b1123e1ddc7f2fd601ff3c70490600090a2505050565b600081815260076020908152604080832087815587845260089092528220805460ff191660011790558454909190610a759085906001600160f81b0361010090910416612a48565b6002865590508015610aad5760018501546040516001600160a01b039091169082156108fc029083906000818181858888f150505050505b604051839087907fd77ab978e3c3b4dbb04a8e8d23b2964df32870f5527cd1ffd8b11610fffade4790600090a360408051600081526020810188905284916001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016917f74baab670a4015ab2f1b467c5252a96141a2573f2908e58a92081e80d3cfde3d910160405180910390a3505050505050565b815460ff1916600417825560405183907f794bcf8358ec9066a41460c1fa506e1679707b1b1123e1ddc7f2fd601ff3c70490600090a2505050565b60405163f7434ea960e01b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f7434ea990610bd39060049081016129ed565b60206040518083038186803b158015610beb57600080fd5b505afa158015610bff573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610c239190612a00565b92915050565b60008181526008602052604090205460ff1615610c815760405162461bcd60e51b81526020600482015260166024820152754469737075746520616c72656164792065786973747360501b6044820152606401610588565b600081815260066020526040812090815460ff166004811115610ca657610ca6612718565b14610cf35760405162461bcd60e51b815260206004820152601d60248201527f4172626974726174696f6e20616c7265616479207265717565737465640000006044820152606401610588565b60405163f7434ea960e01b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063f7434ea990610d429060049081016129ed565b60206040518083038186803b158015610d5a57600080fd5b505afa158015610d6e573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610d929190612a00565b905080341015610ddc5760405162461bcd60e51b81526020600482015260156024820152744465706f7369742076616c756520746f6f206c6f7760581b6044820152606401610588565b6001610100346001600160f81b0316028117835582018054336001600160a01b0319909116811790915560408051602481018690526044808201939093528151808203909301835260640190526020810180516001600160e01b0316634f92e44d60e11b90811790915290610e508161102a565b604051339086907fbeb7c7ca9632eceb7faaaf69b98051a5edd2a3930327b96316c86cb5dc8cb0a690600090a35050505050565b336001600160a01b0316837f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03167fdccf2f8b2cc26eafcd61905cba744cff4b81d14740725f6376390dc6298a6a3c8585604051610eea929190612a5f565b60405180910390a4505050565b60008181526006602052604090206004815460ff166004811115610f1d57610f1d612718565b14610f3a5760405162461bcd60e51b815260040161058890612916565b8054600083815260066020526040808220828155600190810180546001600160a01b031916905584015490516101009093046001600160f81b0316926001600160a01b03909116916108fc841502918491818181858888f150506040805160248082018990528251808303909101815260449091019091526020810180516001600160e01b03166302a67b3d60e51b90811790915293509150610fde90508161102a565b60405185907f841d361c2e9b919234bea88e56ddd3de1314046ccf176d49c24a3c3df788e9a090600090a25050505050565b600061101b82611095565b90506110268161137b565b5050565b60005460025460405163b472047760e01b81526001600160a01b039283169263b472047792611060929116908590600401612a8e565b600060405180830381600087803b15801561107a57600080fd5b505af115801561108e573d6000803e3d6000fd5b5050505050565b606060006110a283611428565b905060006110af82611487565b905060006110bc836114b0565b90506000816110ca846114d9565b6110d386611697565b6040516020016110e593929190612ab2565b60408051601f1981840301815291815281516020928301206000818152600390935291205490915060ff16156111695760405162461bcd60e51b8152602060048201526024808201527f4678526f6f7454756e6e656c3a20455849545f414c52454144595f50524f434560448201526314d4d15160e21b6064820152608401610588565b6000818152600360205260408120805460ff1916600117905561118b856116b3565b90506000611198826117fd565b90506111a38161188d565b6002546001600160a01b0390811691161461120e5760405162461bcd60e51b815260206004820152602560248201527f4678526f6f7454756e6e656c3a20494e56414c49445f46585f4348494c445f54604482015264155393915360da1b6064820152608401610588565b6000611219876118b6565b9050611239611229846020015190565b876112338a6118d2565b846118ee565b6112915760405162461bcd60e51b815260206004820152602360248201527f4678526f6f7454756e6e656c3a20494e56414c49445f524543454950545f505260448201526227a7a360e91b6064820152608401610588565b6112bf8561129e89611ba5565b6112a78a611bc1565b846112b18c611bdd565b6112ba8d611bf9565b611c15565b5060006112cb83611d4a565b90507f8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b0366113016112fc836000611d86565b611dbe565b1461134e5760405162461bcd60e51b815260206004820152601f60248201527f4678526f6f7454756e6e656c3a20494e56414c49445f5349474e4154555245006044820152606401610588565b600061135984611e39565b80602001905181019061136c9190612adf565b9b9a5050505050505050505050565b6000306001600160a01b0316826040516113959190612b56565b6000604051808303816000865af19150503d80600081146113d2576040519150601f19603f3d011682016040523d82523d6000602084013e6113d7565b606091505b50509050806110265760405162461bcd60e51b815260206004820152601760248201527f4661696c656420746f2063616c6c20636f6e74726163740000000000000000006044820152606401610588565b604080516020810190915260608152600061147261146d8460408051808201825260008082526020918201528151808301909252825182529182019181019190915290565b611e55565b60408051602081019091529081529392505050565b6060610c2382600001516008815181106114a3576114a3612b72565b6020026020010151611f6b565b6000610c2382600001516002815181106114cc576114cc612b72565b6020026020010151611dbe565b60408051602081019091526000815281516060919015610c2357600080611501600086612008565b60f81c9050600181148061151857508060ff166003145b156115c05760018551600261152d9190612b88565b6115379190612a48565b67ffffffffffffffff81111561154f5761154f6127f2565b6040519080825280601f01601f191660200182016040528015611579576020820181803683370190505b5092506000611589600187612008565b9050808460008151811061159f5761159f612b72565b60200101906001600160f81b031916908160001a9053506001925050611624565b6002855160026115d09190612b88565b6115da9190612a48565b67ffffffffffffffff8111156115f2576115f26127f2565b6040519080825280601f01601f19166020018201604052801561161c576020820181803683370190505b509250600091505b60ff82165b835181101561168e5761165361164260ff851683612a48565b61164d906002612ba7565b87612008565b84828151811061166557611665612b72565b60200101906001600160f81b031916908160001a9053508061168681612bbf565b915050611629565b50505092915050565b6000610c2382600001516009815181106114cc576114cc612b72565b6116d760405180606001604052806060815260200160608152602001600081525090565b6116f182600001516006815181106114a3576114a3612b72565b60208281018290526040805180820182526000808252908301528051808201909152825181529181019082015261172781612089565b1561173c5761173581611e55565b82526117e9565b6020820151805160009061175290600190612a48565b67ffffffffffffffff81111561176a5761176a6127f2565b6040519080825280601f01601f191660200182016040528015611794576020820181803683370190505b5090506000808360210191508260200190506117b2828285516120c2565b6040805180820182526000808252602091820152815180830190925284518252808501908201526117e290611e55565b8652505050505b6117f283611697565b604083015250919050565b60408051608081018252600091810182815260608083019390935281526020810191909152600061184b836000015160038151811061183e5761183e612b72565b6020026020010151611e55565b83604001518151811061186057611860612b72565b60200260200101519050604051806040016040528082815260200161188483611e55565b90529392505050565b6000610c2382602001516000815181106118a9576118a9612b72565b602002602001015161213d565b6000610c2382600001516005815181106114cc576114cc612b72565b6060610c2382600001516007815181106114a3576114a3612b72565b6000806119228460408051808201825260008082526020918201528151808301909252825182529182019181019190915290565b9050600061192f82611e55565b9050606080856000806119418b6114d9565b905080516000141561195d576000975050505050505050611b9d565b60005b8651811015611b9457815183111561198357600098505050505050505050611b9d565b6119a587828151811061199857611998612b72565b6020026020010151612157565b9550858051906020012084146119c657600098505050505050505050611b9d565b6119db87828151811061183e5761183e612b72565b9450845160111415611ab0578151831415611a3d578c80519060200120611a0e866010815181106114a3576114a3612b72565b805190602001201415611a2c57600198505050505050505050611b9d565b600098505050505050505050611b9d565b6000828481518110611a5157611a51612b72565b016020015160f81c90506010811115611a765760009950505050505050505050611b9d565b611a9b868260ff1681518110611a8e57611a8e612b72565b60200260200101516121d7565b9450611aa8600185612ba7565b935050611b82565b845160021415611a2c576000611adc611ad5876000815181106114a3576114a3612b72565b8486612205565b8351909150611aeb8286612ba7565b1415611b40578d80519060200120611b0f876001815181106114a3576114a3612b72565b805190602001201415611b2e5760019950505050505050505050611b9d565b60009950505050505050505050611b9d565b80611b575760009950505050505050505050611b9d565b611b618185612ba7565b9350611b7986600181518110611a8e57611a8e612b72565b9450611b829050565b80611b8c81612bbf565b915050611960565b50505050505050505b949350505050565b6000610c2382600001516003815181106114cc576114cc612b72565b6000610c2382600001516004815181106114cc576114cc612b72565b6000610c2382600001516000815181106114cc576114cc612b72565b6060610c2382600001516001815181106114a3576114a3612b72565b6001546040516320a9cea560e11b8152600481018490526000918291829182916001600160a01b03909116906341539d4a9060240160a06040518083038186803b158015611c6257600080fd5b505afa158015611c76573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611c9a9190612bda565b5093505092509250611cf1828b611cb19190612a48565b6040805160208082018f90528183018e9052606082018d905260808083018d90528351808403909101815260a0909201909252805191012090858861230e565b611d3d5760405162461bcd60e51b815260206004820152601c60248201527f4678526f6f7454756e6e656c3a20494e56414c49445f484541444552000000006044820152606401610588565b9998505050505050505050565b6040805160208101909152606081526040518060200160405280611d7e846020015160018151811061183e5761183e612b72565b905292915050565b60408051808201909152600080825260208201528251805183908110611dae57611dae612b72565b6020026020010151905092915050565b805160009015801590611dd357508151602110155b611ddc57600080fd5b6000611deb8360200151612473565b90506000818460000151611dff9190612a48565b9050600080838660200151611e149190612ba7565b9050805191506020831015611e3057826020036101000a820491505b50949350505050565b6060610c2382602001516002815181106114a3576114a3612b72565b6060611e6082612089565b611e6957600080fd5b6000611e74836124fb565b905060008167ffffffffffffffff811115611e9157611e916127f2565b604051908082528060200260200182016040528015611ed657816020015b6040805180820190915260008082526020820152815260200190600190039081611eaf5790505b5090506000611ee88560200151612473565b8560200151611ef79190612ba7565b90506000805b84811015611f6057611f0e8361257e565b9150604051806040016040528083815260200184815250848281518110611f3757611f37612b72565b6020908102919091010152611f4c8284612ba7565b925080611f5881612bbf565b915050611efd565b509195945050505050565b8051606090611f7957600080fd5b6000611f888360200151612473565b90506000818460000151611f9c9190612a48565b905060008167ffffffffffffffff811115611fb957611fb96127f2565b6040519080825280601f01601f191660200182016040528015611fe3576020820181803683370190505b5090506000816020019050611e308487602001516120019190612ba7565b8285612622565b6000612015600284612c4b565b1561204f57601082612028600286612c5f565b8151811061203857612038612b72565b016020015161204a919060f81c612c73565b61207f565b60108261205d600286612c5f565b8151811061206d5761206d612b72565b016020015161207f919060f81c612c95565b60f81b9392505050565b805160009061209a57506000919050565b6020820151805160001a9060c08210156120b8575060009392505050565b5060019392505050565b806120cc57505050565b6020811061210457825182526120e3602084612ba7565b92506120f0602083612ba7565b91506120fd602082612a48565b90506120cc565b60006001612113836020612a48565b61211f90610100612d9b565b6121299190612a48565b935183518516941916939093179091525050565b805160009060151461214e57600080fd5b610c2382611dbe565b60606000826000015167ffffffffffffffff811115612178576121786127f2565b6040519080825280601f01601f1916602001820160405280156121a2576020820181803683370190505b5090508051600014156121b55792915050565b60008160200190506121d08460200151828660000151612622565b5092915050565b80516000906021146121e857600080fd5b600080836020015160016121fc9190612ba7565b51949350505050565b60008080612212866114d9565b90506000815167ffffffffffffffff811115612230576122306127f2565b6040519080825280601f01601f19166020018201604052801561225a576020820181803683370190505b509050845b825161226b9087612ba7565b8110156122de57600087828151811061228657612286612b72565b01602001516001600160f81b031916905080836122a38985612a48565b815181106122b3576122b3612b72565b60200101906001600160f81b031916908160001a9053505080806122d690612bbf565b91505061225f565b508080519060200120828051906020012014156122fe5781519250612303565b600092505b509095945050505050565b60006020825161231e9190612c4b565b156123625760405162461bcd60e51b8152602060048201526014602482015273092dcecc2d8d2c840e0e4dedecc40d8cadccee8d60631b6044820152606401610588565b6000602083516123729190612c5f565b905061237f816002612d9b565b85106123c55760405162461bcd60e51b81526020600482015260156024820152744c65616620696e64657820697320746f6f2062696760581b6044820152606401610588565b60008660205b85518111612465578581015192506123e4600289612c4b565b612419576040805160208101849052908101849052606001604051602081830303815290604052805190602001209150612446565b60408051602081018590529081018390526060016040516020818303038152906040528051906020012091505b612451600289612c5f565b975061245e602082612ba7565b90506123cb565b509094149695505050505050565b8051600090811a608081101561248c5750600092915050565b60b88110806124a7575060c081108015906124a7575060f881105b156124b55750600192915050565b60c08110156124e9576124ca600160b8612da7565b6124d79060ff1682612a48565b6124e2906001612ba7565b9392505050565b6124ca600160f8612da7565b50919050565b805160009061250c57506000919050565b60008061251c8460200151612473565b846020015161252b9190612ba7565b90506000846000015185602001516125439190612ba7565b90505b80821015612575576125578261257e565b6125619083612ba7565b91508261256d81612bbf565b935050612546565b50909392505050565b80516000908190811a608081101561259957600191506121d0565b60b88110156125bf576125ad608082612a48565b6125b8906001612ba7565b91506121d0565b60c08110156125ec5760b78103600185019450806020036101000a855104600182018101935050506121d0565b60f8811015612600576125ad60c082612a48565b60019390930151602084900360f7016101000a900490920160f5190192915050565b8061262c57505050565b602081106126645782518252612643602084612ba7565b9250612650602083612ba7565b915061265d602082612a48565b905061262c565b8061210457505050565b60005b83811015612689578181015183820152602001612671565b83811115612698576000848401525b50505050565b600081518084526126b681602086016020860161266e565b601f01601f19169290920160200192915050565b6020815260006124e2602083018461269e565b600080604083850312156126f057600080fd5b50508035926020909101359150565b60006020828403121561271157600080fd5b5035919050565b634e487b7160e01b600052602160045260246000fd5b606081016005851061275057634e487b7160e01b600052602160045260246000fd5b9381526001600160f81b039290921660208301526001600160a01b031660409091015290565b60008060006040848603121561278b57600080fd5b83359250602084013567ffffffffffffffff808211156127aa57600080fd5b818601915086601f8301126127be57600080fd5b8135818111156127cd57600080fd5b8760208285010111156127df57600080fd5b6020830194508093505050509250925092565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f1916810167ffffffffffffffff81118282101715612831576128316127f2565b604052919050565b600067ffffffffffffffff821115612853576128536127f2565b50601f01601f191660200190565b60006020828403121561287357600080fd5b813567ffffffffffffffff81111561288a57600080fd5b8201601f8101841361289b57600080fd5b80356128ae6128a982612839565b612808565b8181528560208385010111156128c357600080fd5b81602084016020830137600091810160200191909152949350505050565b600181811c908216806128f557607f821691505b602082108114156124f557634e487b7160e01b600052602260045260246000fd5b6020808252601a908201527f496e76616c6964206172626974726174696f6e20737461747573000000000000604082015260600190565b8054600090600181811c908083168061296757607f831692505b602080841082141561298957634e487b7160e01b600052602260045260246000fd5b838852602088018280156129a457600181146129b5576129e0565b60ff198716825282820197506129e0565b60008981526020902060005b878110156129da578154848201529086019084016129c1565b83019850505b5050505050505092915050565b6020815260006124e2602083018461294d565b600060208284031215612a1257600080fd5b5051919050565b828152604060208201526000611b9d604083018461294d565b634e487b7160e01b600052601160045260246000fd5b600082821015612a5a57612a5a612a32565b500390565b60208152816020820152818360408301376000818301604090810191909152601f909201601f19160101919050565b6001600160a01b0383168152604060208201819052600090611b9d9083018461269e565b83815260008351612aca81602085016020880161266e565b60209201918201929092526040019392505050565b600060208284031215612af157600080fd5b815167ffffffffffffffff811115612b0857600080fd5b8201601f81018413612b1957600080fd5b8051612b276128a982612839565b818152856020838501011115612b3c57600080fd5b612b4d82602083016020860161266e565b95945050505050565b60008251612b6881846020870161266e565b9190910192915050565b634e487b7160e01b600052603260045260246000fd5b6000816000190483118215151615612ba257612ba2612a32565b500290565b60008219821115612bba57612bba612a32565b500190565b6000600019821415612bd357612bd3612a32565b5060010190565b600080600080600060a08688031215612bf257600080fd5b855160208701516040880151606089015160808a0151939850919650945092506001600160a01b0381168114612c2757600080fd5b809150509295509295909350565b634e487b7160e01b600052601260045260246000fd5b600082612c5a57612c5a612c35565b500690565b600082612c6e57612c6e612c35565b500490565b600060ff831680612c8657612c86612c35565b8060ff84160691505092915050565b600060ff831680612ca857612ca8612c35565b8060ff84160491505092915050565b600181815b80851115612cf2578160001904821115612cd857612cd8612a32565b80851615612ce557918102915b93841c9390800290612cbc565b509250929050565b600082612d0957506001610c23565b81612d1657506000610c23565b8160018114612d2c5760028114612d3657612d52565b6001915050610c23565b60ff841115612d4757612d47612a32565b50506001821b610c23565b5060208310610133831016604e8410600b8410161715612d75575081810a610c23565b612d7f8383612cb7565b8060001904821115612d9357612d93612a32565b029392505050565b60006124e28383612cfa565b600060ff821660ff841680821015612dc157612dc1612a32565b9003939250505056fea2646970667358221220ccd65bee3a0d1dd9a09554c69a9692dcf06f3089656eb459ad190d13703b636464736f6c63430008090033",
+  "devdoc": {
+    "details": "This contract is meant to be deployed to the Ethereum chains where Kleros is deployed.",
+    "kind": "dev",
+    "methods": {
+      "constructor": {
+        "params": {
+          "_arbitrator": "Arbitrator contract address.",
+          "_arbitratorExtraData": "The extra data used to raise a dispute in the arbitrator.",
+          "_checkpointManager": "For Polygon FX-portal bridge",
+          "_fxRoot": "Address of the FxRoot contract of the Polygon bridge",
+          "_homeProxy": "The address of the proxy.",
+          "_metaEvidence": "The URI of the meta evidence file.",
+          "_termsOfService": "The path for the Terms of Service for Kleros as an arbitrator for Realitio."
+        }
+      },
+      "createDisputeForProjectRequest(uint256)": {
+        "params": {
+          "_projectID": "The ID of the project."
+        }
+      },
+      "getDisputeFee(uint256)": {
+        "returns": {
+          "_0": "The fee to create a dispute."
+        }
+      },
+      "handleFailedDisputeCreation(uint256)": {
+        "params": {
+          "_projectID": "The ID of the question."
+        }
+      },
+      "receiveArbitrationAcknowledgement(uint256)": {
+        "params": {
+          "_projectID": "The ID of the project."
+        }
+      },
+      "receiveArbitrationCancelation(uint256)": {
+        "params": {
+          "_projectID": "The ID of the question."
+        }
+      },
+      "receiveMessage(bytes)": {
+        "details": "This function verifies if the transaction actually happened on child chain",
+        "params": {
+          "inputData": "RLP encoded data of the reference tx containing following list of fields  0 - headerNumber - Checkpoint header block number containing the reference tx  1 - blockProof - Proof that the block header (in the child chain) is a leaf in the submitted merkle root  2 - blockNumber - Block number containing the reference tx on child chain  3 - blockTime - Reference tx block time  4 - txRoot - Transactions root of block  5 - receiptRoot - Receipts root of block  6 - receipt - Receipt of the reference transaction  7 - receiptProof - Merkle proof of the reference receipt  8 - branchMask - 32 bits denoting the path of receipt in merkle tree  9 - receiptLogIndex - Log Index to read from the receipt"
+        }
+      },
+      "rule(uint256,uint256)": {
+        "params": {
+          "_disputeID": "The ID of the dispute in the ERC792 arbitrator.",
+          "_ruling": "The ruling given by the arbitrator."
+        }
+      },
+      "submitEvidence(uint256,string)": {
+        "params": {
+          "_arbitrationID": "The ID of the arbitration related to the question.",
+          "_evidenceURI": "Link to evidence."
+        }
+      }
+    },
+    "stateVariables": {
+      "META_EVIDENCE_ID": {
+        "details": "The ID of the MetaEvidence for disputes."
+      },
+      "NUMBER_OF_CHOICES_FOR_ARBITRATOR": {
+        "details": "The number of choices for the arbitrator. Kleros is currently able to provide ruling values of up to 2^256 - 2."
+      },
+      "arbitrationRequests": {
+        "details": "Tracks arbitration requests for project ID."
+      },
+      "arbitrator": {
+        "details": "The address of the arbitrator. TRUSTED."
+      },
+      "arbitratorExtraData": {
+        "details": "The extra data used to raise a dispute in the arbitrator."
+      },
+      "disputeIDToDisputeDetails": {
+        "details": "Associates dispute ID to project ID and the requester."
+      },
+      "projectIDToDisputeExists": {
+        "details": "Whether a dispute has already been created for the given project ID or not."
+      },
+      "termsOfService": {
+        "details": "The path for the Terms of Service for Kleros as an arbitrator for Realitio."
+      }
+    },
+    "title": "Arbitration proxy for Realitio on Ethereum side (A.K.A. the Foreign Chain).",
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "ArbitrationCanceled(uint256)": {
+        "notice": "Should be emitted when the arbitration is canceled by the Home Chain."
+      },
+      "ArbitrationCreated(uint256,uint256)": {
+        "notice": "Should be emitted when the dispute is created."
+      },
+      "ArbitrationFailed(uint256)": {
+        "notice": "Should be emitted when the dispute could not be created."
+      },
+      "ArbitrationRequested(uint256,address)": {
+        "notice": "Should be emitted when the arbitration is requested."
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "constructor": {
+        "notice": "Creates an arbitration proxy on the foreign chain."
+      },
+      "createDisputeForProjectRequest(uint256)": {
+        "notice": "Requests arbitration for the given projectID."
+      },
+      "getDisputeFee(uint256)": {
+        "notice": "Gets the fee to create a dispute."
+      },
+      "handleFailedDisputeCreation(uint256)": {
+        "notice": "Cancels the arbitration in case the dispute could not be created."
+      },
+      "receiveArbitrationAcknowledgement(uint256)": {
+        "notice": "Receives the acknowledgement of the arbitration request for the given project. TRUSTED."
+      },
+      "receiveArbitrationCancelation(uint256)": {
+        "notice": "Receives the cancelation of the arbitration request for the given question. TRUSTED."
+      },
+      "receiveMessage(bytes)": {
+        "notice": "receive message from  L2 to L1, validated by proof"
+      },
+      "rule(uint256,uint256)": {
+        "notice": "Rules a specified dispute."
+      },
+      "submitEvidence(uint256,string)": {
+        "notice": "Allows to submit evidence for a particular question."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 4353,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "fxRoot",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_contract(IFxStateSender)4303"
+      },
+      {
+        "astId": 4356,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "checkpointManager",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_contract(ICheckpointManager)4321"
+      },
+      {
+        "astId": 4358,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "fxChildTunnel",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_address"
+      },
+      {
+        "astId": 4362,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "processedExits",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_bytes32,t_bool)"
+      },
+      {
+        "astId": 3489,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "arbitratorExtraData",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_bytes_storage"
+      },
+      {
+        "astId": 3492,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "termsOfService",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_string_storage"
+      },
+      {
+        "astId": 3523,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "arbitrationRequests",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_mapping(t_uint256,t_struct(ArbitrationRequest)3514_storage)"
+      },
+      {
+        "astId": 3529,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "disputeIDToDisputeDetails",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_mapping(t_uint256,t_struct(DisputeDetails)3517_storage)"
+      },
+      {
+        "astId": 3534,
+        "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+        "label": "projectIDToDisputeExists",
+        "offset": 0,
+        "slot": "8",
+        "type": "t_mapping(t_uint256,t_bool)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_bytes_storage": {
+        "encoding": "bytes",
+        "label": "bytes",
+        "numberOfBytes": "32"
+      },
+      "t_contract(ICheckpointManager)4321": {
+        "encoding": "inplace",
+        "label": "contract ICheckpointManager",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IFxStateSender)4303": {
+        "encoding": "inplace",
+        "label": "contract IFxStateSender",
+        "numberOfBytes": "20"
+      },
+      "t_enum(Status)3506": {
+        "encoding": "inplace",
+        "label": "enum SundialForeignArbitrationProxy.Status",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_bytes32,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_uint256,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_uint256,t_struct(ArbitrationRequest)3514_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct SundialForeignArbitrationProxy.ArbitrationRequest)",
+        "numberOfBytes": "32",
+        "value": "t_struct(ArbitrationRequest)3514_storage"
+      },
+      "t_mapping(t_uint256,t_struct(DisputeDetails)3517_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct SundialForeignArbitrationProxy.DisputeDetails)",
+        "numberOfBytes": "32",
+        "value": "t_struct(DisputeDetails)3517_storage"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(ArbitrationRequest)3514_storage": {
+        "encoding": "inplace",
+        "label": "struct SundialForeignArbitrationProxy.ArbitrationRequest",
+        "members": [
+          {
+            "astId": 3509,
+            "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+            "label": "status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_enum(Status)3506"
+          },
+          {
+            "astId": 3511,
+            "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+            "label": "deposit",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_uint248"
+          },
+          {
+            "astId": 3513,
+            "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+            "label": "requester",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(DisputeDetails)3517_storage": {
+        "encoding": "inplace",
+        "label": "struct SundialForeignArbitrationProxy.DisputeDetails",
+        "members": [
+          {
+            "astId": 3516,
+            "contract": "src/SundialForeignArbitrationProxy.sol:SundialForeignArbitrationProxy",
+            "label": "projectID",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "32"
+      },
+      "t_uint248": {
+        "encoding": "inplace",
+        "label": "uint248",
+        "numberOfBytes": "31"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
