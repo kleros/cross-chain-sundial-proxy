@@ -42,6 +42,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
     struct ArbitrationRequest {
         Status status; // Status of the arbitration.
         uint248 deposit; // The deposit paid by the requester at the time of the arbitration.
+        address requester; // The address of the requester who managed to go through with the arbitration request.
         uint256 disputeID; // The ID of the dispute in arbitrator contract.
         uint256 answer; // The answer given by the arbitrator shifted by -1 to match Realitio format.
         Round[] rounds; // Tracks each appeal round of a dispute.
@@ -49,16 +50,21 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
 
     struct DisputeDetails {
         uint256 arbitrationID; // The ID of the arbitration.
-        address requester; // The address of the requester who managed to go through with the arbitration request.
     }
 
     // Round struct stores the contributions made to particular answers.
     struct Round {
-        mapping(uint256 => uint256) paidFees; // Tracks the fees paid in this round in the form paidFees[answer].
-        mapping(uint256 => bool) hasPaid; // True if the fees for this particular answer have been fully paid in the form hasPaid[answer].
-        mapping(address => mapping(uint256 => uint256)) contributions; // Maps contributors to their contributions for each answer in the form contributions[address][answer].
-        uint256 feeRewards; // Sum of reimbursable appeal fees available to the parties that made contributions to the answer that ultimately wins a dispute.
-        uint256[] fundedAnswers; // Stores the answer choices that are fully funded.
+        // Tracks the fees paid in this round in the form paidFees[answer].
+        mapping(uint256 => uint256) paidFees;
+        // True if the fees for this particular answer have been fully paid in the form hasPaid[answer].
+        mapping(uint256 => bool) hasPaid;
+        // Maps contributors to their contributions for each answer in the form contributions[address][answer].
+        mapping(address => mapping(uint256 => uint256)) contributions;
+        // Sum of reimbursable appeal fees available to the parties that
+        // made contributions to the answer that ultimately wins a dispute.
+        uint256 feeRewards;
+        // Stores the answer choices that are fully funded.
+        uint256[] fundedAnswers;
     }
 
     IArbitrator public immutable arbitrator; // The address of the arbitrator. TRUSTED.
@@ -67,14 +73,21 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
     string public termsOfService; // The path for the Terms of Service for Kleros as an arbitrator for Realitio.
 
     // Multipliers are in basis points.
-    uint256 public immutable winnerMultiplier; // Multiplier for calculating the appeal fee that must be paid for the answer that was chosen by the arbitrator in the previous round.
-    uint256 public immutable loserMultiplier; // Multiplier for calculating the appeal fee that must be paid for the answer that the arbitrator didn't rule for in the previous round.
-    uint256 public immutable loserAppealPeriodMultiplier; // Multiplier for calculating the duration of the appeal period for the loser, in basis points.
+    // Multiplier for calculating the appeal fee that must be paid for the
+    // answer that was chosen by the arbitrator in the previous round.
+    uint256 public immutable winnerMultiplier;
+    // Multiplier for calculating the appeal fee that must be paid for the
+    // answer that the arbitrator didn't rule for in the previous round.
+    uint256 public immutable loserMultiplier;
+    // Multiplier for calculating the duration of the appeal period for the loser.
+    uint256 public immutable loserAppealPeriodMultiplier;
 
-    mapping(uint256 => mapping(address => ArbitrationRequest)) public arbitrationRequests; // Maps arbitration ID to its data. arbitrationRequests[uint(quertionID)][requester].
-    mapping(uint256 => DisputeDetails) public disputeIDToDisputeDetails; // Maps external dispute ids to local arbitration ID and requester who was able to complete the arbitration request.
-    mapping(uint256 => bool) public arbitrationIDToDisputeExists; // Whether a dispute has already been created for the given arbitration ID or not.
-    mapping(uint256 => address) public arbitrationIDToRequester; // Maps arbitration ID to the requester who was able to complete the arbitration request.
+    // Maps arbitration ID to its data.
+    mapping(uint256 => ArbitrationRequest) public arbitrationRequests;
+    // Maps external dispute ids to local arbitration ID and requester who was able to complete the arbitration request.
+    mapping(uint256 => DisputeDetails) public disputeIDToDisputeDetails;
+    // Whether a dispute has already been created for the given arbitration ID or not.
+    mapping(uint256 => bool) public arbitrationIDToDisputeExists;
 
     modifier onlyBridge() {
         require(msg.sender == address(this), "Can only be called via bridge");
@@ -125,7 +138,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
     function createDisputeForProjectRequest(uint256 _projectID) external payable override {
         require(!arbitrationIDToDisputeExists[_projectID], "Dispute already exists");
 
-        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID][msg.sender];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_projectID];
         require(arbitration.status == Status.None, "Arbitration already requested");
 
         uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);
@@ -133,6 +146,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
 
         arbitration.status = Status.Requested;
         arbitration.deposit = uint248(msg.value);
+        arbitration.requester = msg.sender;
 
         bytes4 methodSelector = IHomeArbitrationProxy.receiveCreateDisputeRequest.selector;
         bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, msg.sender);
@@ -142,13 +156,12 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
     }
 
     /**
-     * @notice Receives the acknowledgement of the arbitration request for the given project and requester. TRUSTED.
+     * @notice Receives the acknowledgement of the arbitration request for the given project. TRUSTED.
      * @param _projectID The ID of the project.
-     * @param _requester The requester.
      */
-    function receiveArbitrationAcknowledgement(uint256 _projectID, address _requester) public override onlyBridge {
+    function receiveArbitrationAcknowledgement(uint256 _projectID) public override onlyBridge {
         uint256 arbitrationID = _projectID;
-        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID][_requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(arbitration.status == Status.Requested, "Invalid arbitration status");
 
         uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);
@@ -159,10 +172,8 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
             returns (uint256 disputeID) {
                 DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[disputeID];
                 disputeDetails.arbitrationID = arbitrationID;
-                disputeDetails.requester = _requester;
 
                 arbitrationIDToDisputeExists[arbitrationID] = true;
-                arbitrationIDToRequester[arbitrationID] = _requester;
 
                 // At this point, arbitration.deposit is guaranteed to be greater than or equal to the arbitration cost.
                 uint256 remainder = arbitration.deposit - arbitrationCost;
@@ -173,57 +184,55 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
                 arbitration.rounds.push();
 
                 if (remainder > 0) {
-                    payable(_requester).send(remainder);
+                    payable(arbitration.requester).send(remainder);
                 }
 
-                emit ArbitrationCreated(_projectID, _requester, disputeID);
+                emit ArbitrationCreated(_projectID, disputeID);
                 emit Dispute(arbitrator, disputeID, META_EVIDENCE_ID, arbitrationID);
             } catch {
                 arbitration.status = Status.Failed;
-                emit ArbitrationFailed(_projectID, _requester);
+                emit ArbitrationFailed(_projectID);
             }
         } else {
             arbitration.status = Status.Failed;
-            emit ArbitrationFailed(_projectID, _requester);
+            emit ArbitrationFailed(_projectID);
         }
     }
 
     /**
-     * @notice Receives the cancelation of the arbitration request for the given project and requester. TRUSTED.
+     * @notice Receives the cancelation of the arbitration request for the given project. TRUSTED.
      * @param _projectID The ID of the project.
-     * @param _requester The requester.
      */
-    function receiveArbitrationCancelation(uint256 _projectID, address _requester) public override onlyBridge {
+    function receiveArbitrationCancelation(uint256 _projectID) public override onlyBridge {
         uint256 arbitrationID = _projectID;
-        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID][_requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(arbitration.status == Status.Requested, "Invalid arbitration status");
         uint256 deposit = arbitration.deposit;
 
-        delete arbitrationRequests[arbitrationID][_requester];
-        payable(_requester).send(deposit);
+        delete arbitrationRequests[arbitrationID];
+        payable(arbitration.requester).send(deposit);
 
-        emit ArbitrationCanceled(_projectID, _requester);
+        emit ArbitrationCanceled(_projectID);
     }
 
     /**
      * @notice Cancels the arbitration in case the dispute could not be created.
      * @param _projectID The ID of the project.
-     * @param _requester The address of the arbitration requester.
      */
-    function handleFailedDisputeCreation(uint256 _projectID, address _requester) external override {
+    function handleFailedDisputeCreation(uint256 _projectID) external override {
         uint256 arbitrationID = _projectID;
-        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID][_requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(arbitration.status == Status.Failed, "Invalid arbitration status");
         uint256 deposit = arbitration.deposit;
 
-        delete arbitrationRequests[arbitrationID][_requester];
-        payable(_requester).send(deposit);
+        delete arbitrationRequests[arbitrationID];
+        payable(arbitration.requester).send(deposit);
 
         bytes4 methodSelector = IHomeArbitrationProxy(0).receiveArbitrationFailure.selector;
-        bytes memory data = abi.encodeWithSelector(methodSelector, _projectID, _requester);
+        bytes memory data = abi.encodeWithSelector(methodSelector, _projectID);
         _sendMessageToChild(data);
 
-        emit ArbitrationCanceled(_projectID, _requester);
+        emit ArbitrationCanceled(_projectID);
     }
 
     // ********************************* //
@@ -240,9 +249,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      */
     function fundAppeal(uint256 _arbitrationID, uint256 _answer) external payable override returns (bool) {
         require(_answer <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, "Answer is out of bounds");
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][
-            arbitrationIDToRequester[_arbitrationID]
-        ];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         require(arbitration.status == Status.Created, "No dispute to appeal.");
 
         uint256 disputeID = arbitration.disputeID;
@@ -311,8 +318,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         uint256 _round,
         uint256 _answer
     ) public override returns (uint256 reward) {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         Round storage round = arbitration.rounds[_round];
         require(arbitration.status == Status.Ruled, "Dispute not resolved");
         // Allow to reimburse if funding of the round was unsuccessful.
@@ -351,8 +357,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         address payable _beneficiary,
         uint256 _contributedTo
     ) external override {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
 
         uint256 numberOfRounds = arbitration.rounds.length;
         for (uint256 roundNumber = 0; roundNumber < numberOfRounds; roundNumber++) {
@@ -379,9 +384,8 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         require(_ruling <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, "Invalid ruling");
         DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[_disputeID];
         uint256 arbitrationID = disputeDetails.arbitrationID;
-        address requester = disputeDetails.requester;
 
-        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(msg.sender == address(arbitrator), "Only arbitrator allowed");
         require(arbitration.status == Status.Created, "Invalid arbitration status");
         uint256 finalRuling = _ruling;
@@ -449,8 +453,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      * @return The number of rounds.
      */
     function getNumberOfRounds(uint256 _arbitrationID) external view returns (uint256) {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         return arbitration.rounds.length;
     }
 
@@ -471,8 +474,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
             uint256[] memory fundedAnswers
         )
     {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         Round storage round = arbitration.rounds[_round];
         fundedAnswers = round.fundedAnswers;
 
@@ -498,8 +500,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         uint256 _round,
         uint256 _answer
     ) external view returns (uint256 raised, bool fullyFunded) {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         Round storage round = arbitration.rounds[_round];
 
         raised = round.paidFees[_answer];
@@ -519,8 +520,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         uint256 _round,
         address _contributor
     ) external view returns (uint256[] memory fundedAnswers, uint256[] memory contributions) {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         Round storage round = arbitration.rounds[_round];
 
         fundedAnswers = round.fundedAnswers;
@@ -545,8 +545,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         address payable _beneficiary,
         uint256 _contributedTo
     ) external view override returns (uint256 sum) {
-        address requester = arbitrationIDToRequester[_arbitrationID];
-        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID][requester];
+        ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         if (arbitration.status < Status.Ruled) return sum;
 
         uint256 finalAnswer = arbitration.answer;

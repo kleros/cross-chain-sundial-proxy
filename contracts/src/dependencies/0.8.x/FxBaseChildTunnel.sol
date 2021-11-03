@@ -23,20 +23,15 @@ abstract contract FxBaseChildTunnel is IFxMessageProcessor {
     // fx root tunnel
     address public fxRootTunnel;
 
-    constructor(address _fxChild) {
+    constructor(address _fxChild, address _fxRootTunnel) {
         fxChild = _fxChild;
+        fxRootTunnel = _fxRootTunnel;
     }
 
     // Sender must be fxRootTunnel in case of ERC20 tunnel
     modifier validateSender(address sender) {
         require(sender == fxRootTunnel, "FxBaseChildTunnel: INVALID_SENDER_FROM_ROOT");
         _;
-    }
-
-    // set fxRootTunnel if not set already
-    function setFxRootTunnel(address _fxRootTunnel) external {
-        require(fxRootTunnel == address(0x0), "FxBaseChildTunnel: ROOT_TUNNEL_ALREADY_SET");
-        fxRootTunnel = _fxRootTunnel;
     }
 
     function processMessageFromRoot(

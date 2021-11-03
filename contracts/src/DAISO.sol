@@ -11,9 +11,10 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Types.sol";
 import "./DAISOInterface.sol";
 
+import {FxBaseChildTunnel} from "./dependencies/0.8.x/FxBaseChildTunnel.sol";
 import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./dependencies/0.8.x/ArbitrationProxyInterfaces.sol";
 
-contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterface {
+contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterface, FxBaseChildTunnel {
     using SafeMath for uint256;
 
     /*** Storage Properties ***/
@@ -32,11 +33,6 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      * @notice Counter for EvidenceGroup ids.
      */
     uint256 public nextEvidenceGroup;
-
-    /**
-     * @notice Address of IArbitrator.
-     */
-    address arbitratorAddress;
 
     /**
      * @notice Calculation project balance.
@@ -107,16 +103,10 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
 
     /*** Contract Logic Starts Here */
 
-    constructor() {
-        arbitratorAddress = address(0x60B2AbfDfaD9c0873242f59f2A8c32A3Cc682f80);
+    constructor(address _fxChild, address _foreignProxy) FxBaseChildTunnel(_fxChild, _foreignProxy) {
         nextStreamId = 1;
         nextProjectId = 1;
         nextEvidenceGroup = 1;
-    }
-
-    /*** Update Arbitration Address */
-    function updateArbitratorAddress(address arbitrator) external onlyOwner {
-        arbitratorAddress = arbitrator;
     }
 
     /*** Project Functions ***/
@@ -827,14 +817,25 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
      *  Throws if the now exceeds arbitration.reclaimedAt + 86400(reclaimed time).
      * @param _projectId The id of the project arbitration for which to query the delta.
      */
-    function receiveCreateDisputeRequest(uint256 _projectId, address _requester) external onlyBridge {
+    function receiveCreateDisputeRequest(uint256 _projectId) external onlyBridge {
         Types.Arbitration storage arbitration = arbitrations[_projectId];
 
-        require(arbitration.status == Types.Status.Reclaimed, "Request already exists");
-        require(block.timestamp - arbitration.reclaimedAt <= 86400, "ARRIVAL_RECLAIMEDPERIOD");
+        if (arbitration.status == Types.Status.Reclaimed && block.timestamp - arbitration.reclaimedAt <= 86400) {
+            arbitrations[_projectId].status = Types.Status.Disputed;
 
-        arbitrations[_projectId].status = Types.Status.Disputed;
-        emit RequestAcknowledged(_projectId, _requester);
+            bytes4 selector = IForeignArbitrationProxy.receiveArbitrationAcknowledgement.selector;
+            bytes memory data = abi.encodeWithSelector(selector, _projectId);
+            _sendMessageToRoot(data);
+
+            emit RequestAcknowledged(_projectId);
+        } else {
+            // Invalid Request
+            bytes4 selector = IForeignArbitrationProxy.receiveArbitrationCancelation.selector;
+            bytes memory data = abi.encodeWithSelector(selector, _projectId);
+            _sendMessageToRoot(data);
+
+            emit RequestCanceled(_projectId);
+        }
     }
 
     /**
@@ -871,9 +872,6 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
 
     /**
      * @notice IArbitrator Execute ruling.
-     * @dev Throws if the caller not the arbitratorAddress.
-     *  Throws if the arbitration.status is not Disputed.
-     *  Throws if the _ruling is bigger than 2.
      * @param _projectId The ID of the project.
      * @param _ruling The result of Irabitrator.
      */
@@ -897,5 +895,15 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
         } else if (_ruling == 0) {
             delete arbitrations[_projectId];
         }
+    }
+
+    function _processMessageFromRoot(
+        uint256 stateId,
+        address sender,
+        bytes memory _data
+    ) internal override validateSender(sender) {
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, ) = address(this).call(_data);
+        require(success, "Failed to call contract");
     }
 }

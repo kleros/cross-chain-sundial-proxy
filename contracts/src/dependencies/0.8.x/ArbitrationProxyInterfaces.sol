@@ -9,9 +9,14 @@ interface IHomeArbitrationProxy {
     /**
      * @notice To be emitted when the arbitration request acknowledgement is sent to the Foreign Chain.
      * @param _projectID The ID of the question.
-     * @param _requester The address of the arbitration requester.
      */
-    event RequestAcknowledged(uint256 indexed _projectID, address indexed _requester);
+    event RequestAcknowledged(uint256 indexed _projectID);
+
+    /**
+     * @notice To be emitted when the arbitration request is canceled.
+     * @param _projectID The ID of the question.
+     */
+    event RequestCanceled(uint256 indexed _projectID);
 
     /**
      * @notice To be emitted when the dispute could not be created on the Foreign Chain.
@@ -30,9 +35,8 @@ interface IHomeArbitrationProxy {
     /**
      * @notice Requests arbitration for the given projectID.
      * @param _projectID The ID of the project.
-     * @param _requester The address of the arbitration requester.
      */
-    function receiveCreateDisputeRequest(uint256 _projectID, address _requester) external;
+    function receiveCreateDisputeRequest(uint256 _projectID) external;
 
     /**
      * @notice Receives a failed attempt to request arbitration. TRUSTED.
@@ -60,26 +64,23 @@ interface IForeignArbitrationProxy is IArbitrable, IEvidence {
     /**
      * @notice Should be emitted when the dispute is created.
      * @param _projectID The ID of the question with the request for arbitration.
-     * @param _requester The address of the arbitration requester.
      * @param _disputeID The ID of the dispute.
      */
-    event ArbitrationCreated(uint256 indexed _projectID, address indexed _requester, uint256 indexed _disputeID);
-
-    /**
-     * @notice Should be emitted when the arbitration is canceled by the Home Chain.
-     * @param _projectID The ID of the question with the request for arbitration.
-     * @param _requester The address of the arbitration requester.
-     */
-    event ArbitrationCanceled(uint256 indexed _projectID, address indexed _requester);
+    event ArbitrationCreated(uint256 indexed _projectID, uint256 indexed _disputeID);
 
     /**
      * @notice Should be emitted when the dispute could not be created.
      * @dev This will happen if there is an increase in the arbitration fees
      * between the time the arbitration is made and the time it is acknowledged.
      * @param _projectID The ID of the question with the request for arbitration.
-     * @param _requester The address of the arbitration requester.
      */
-    event ArbitrationFailed(uint256 indexed _projectID, address indexed _requester);
+    event ArbitrationFailed(uint256 indexed _projectID);
+
+    /**
+     * @notice Should be emitted when the arbitration is canceled by the Home Chain.
+     * @param _projectID The ID of the question with the request for arbitration.
+     */
+    event ArbitrationCanceled(uint256 indexed _projectID);
 
     /**
      * @notice Requests arbitration for the given projectID.
@@ -88,25 +89,22 @@ interface IForeignArbitrationProxy is IArbitrable, IEvidence {
     function createDisputeForProjectRequest(uint256 _projectID) external payable;
 
     /**
-     * @notice Receives the acknowledgement of the arbitration request for the given question and requester. TRUSTED.
+     * @notice Receives the acknowledgement of the arbitration request for the given question. TRUSTED.
      * @param _projectID The ID of the question.
-     * @param _requester The address of the arbitration requester.
      */
-    function receiveArbitrationAcknowledgement(uint256 _projectID, address _requester) external;
+    function receiveArbitrationAcknowledgement(uint256 _projectID) external;
 
     /**
-     * @notice Receives the cancelation of the arbitration request for the given question and requester. TRUSTED.
+     * @notice Receives the cancelation of the arbitration request for the given question. TRUSTED.
      * @param _projectID The ID of the question.
-     * @param _requester The address of the arbitration requester.
      */
-    function receiveArbitrationCancelation(uint256 _projectID, address _requester) external;
+    function receiveArbitrationCancelation(uint256 _projectID) external;
 
     /**
      * @notice Cancels the arbitration in case the dispute could not be created.
      * @param _projectID The ID of the question.
-     * @param _requester The address of the arbitration requester.
      */
-    function handleFailedDisputeCreation(uint256 _projectID, address _requester) external;
+    function handleFailedDisputeCreation(uint256 _projectID) external;
 
     /**
      * @notice Gets the fee to create a dispute.
