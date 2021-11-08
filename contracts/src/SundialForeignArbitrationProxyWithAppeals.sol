@@ -82,7 +82,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
     // Multiplier for calculating the duration of the appeal period for the loser.
     uint256 public immutable loserAppealPeriodMultiplier;
 
-    // Maps arbitration ID to its data.
+    // Maps project ID to its arbitration data.
     mapping(uint256 => ArbitrationRequest) public arbitrationRequests;
     // Maps external dispute ids to local arbitration ID and requester who was able to complete the arbitration request.
     mapping(uint256 => DisputeDetails) public disputeIDToDisputeDetails;
