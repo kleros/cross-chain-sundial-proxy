@@ -1,9 +1,11 @@
 const { ethers } = require("hardhat");
-const { solidity } = require("ethereum-waffle");
+const { solidity, deployMockContract } = require("ethereum-waffle");
 const { time } = require("@openzeppelin/test-helpers");
 const { use, expect } = require("chai");
 const { MAX_UINT256 } = require("@openzeppelin/test-helpers/src/constants");
 const getContractAddress = require("../deploy-helpers/getContractAddress");
+
+const DAIABI = require("./DAIABI.json");
 
 use(solidity);
 
@@ -49,6 +51,14 @@ describe("Cross-chain arbitration with appeals", () => {
     // Create disputes so the index in tests will not be a default value.
     await arbitrator.connect(other).createDispute(42, arbitratorExtraData, { value: arbitrationCost });
     await arbitrator.connect(other).createDispute(4, arbitratorExtraData, { value: arbitrationCost });
+
+    const mockDAI = await deployMockContract(governor, DAIABI.abi);
+    await mockDAI.mock.transferFrom.returns(true);
+
+    const currentTime = await time.latest();
+    await homeProxy
+      .connect(requester)
+      .createProject(mockDAI.address, 100, ADDRESS_ZERO, 100, currentTime + 10, currentTime + 1000, 1, "ipfshash");
   });
 
   it("Should correctly set the initial values", async () => {
@@ -124,23 +134,17 @@ describe("Cross-chain arbitration with appeals", () => {
   });
 
   it("Should cancel arbitration correctly", async () => {
-    const badMaxPrevious = 11;
-    await expect(foreignProxy.connect(requester).requestArbitration(projectID, badMaxPrevious, { value: 5555 }))
-      .to.emit(homeProxy, "RequestRejected")
-      .withArgs(projectID, await requester.getAddress(), badMaxPrevious, "Bond has changed")
+    const nonExistentProjectID = 11;
+    await expect(foreignProxy.connect(requester).createDisputeForProjectRequest(nonExistentProjectID, { value: 5555 }))
+      .to.emit(homeProxy, "RequestCanceled")
+      .withArgs(nonExistentProjectID)
       .to.emit(foreignProxy, "ArbitrationRequested")
-      .withArgs(projectID, await requester.getAddress(), badMaxPrevious);
+      .withArgs(nonExistentProjectID, await requester.getAddress());
 
     const oldBalance = await requester.getBalance();
-    await expect(
-      foreignProxy.connect(other).receiveArbitrationCancelation(projectID, await requester.getAddress())
-    ).to.be.revertedWith("Can only be called via bridge");
-
-    await expect(homeProxy.handleRejectedRequest(projectID, await requester.getAddress()))
-      .to.emit(foreignProxy, "ArbitrationCanceled")
-      .withArgs(projectID, await requester.getAddress())
-      .to.emit(homeProxy, "RequestCanceled")
-      .withArgs(projectID, await requester.getAddress());
+    await expect(foreignProxy.connect(other).receiveArbitrationCancelation(projectID)).to.be.revertedWith(
+      "Can only be called via bridge"
+    );
 
     const newBalance = await requester.getBalance();
     expect(newBalance).to.equal(oldBalance.add(5555), "Requester was not reimbursed correctly");
