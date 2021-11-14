@@ -48,10 +48,6 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         Round[] rounds; // Tracks each appeal round of a dispute.
     }
 
-    struct DisputeDetails {
-        uint256 arbitrationID; // The ID of the arbitration.
-    }
-
     // Round struct stores the contributions made to particular answers.
     struct Round {
         // Tracks the fees paid in this round in the form paidFees[answer].
@@ -84,8 +80,8 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
 
     // Maps project ID to its arbitration data.
     mapping(uint256 => ArbitrationRequest) public arbitrationRequests;
-    // Maps external dispute ids to local arbitration ID and requester who was able to complete the arbitration request.
-    mapping(uint256 => DisputeDetails) public disputeIDToDisputeDetails;
+    // Maps external dispute ids to local arbitration ID.
+    mapping(uint256 => uint256) public disputeIDToArbitrationID;
     // Whether a dispute has already been created for the given arbitration ID or not.
     mapping(uint256 => bool) public arbitrationIDToDisputeExists;
 
@@ -170,9 +166,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
             try
                 arbitrator.createDispute{value: arbitrationCost}(NUMBER_OF_CHOICES_FOR_ARBITRATOR, arbitratorExtraData)
             returns (uint256 disputeID) {
-                DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[disputeID];
-                disputeDetails.arbitrationID = arbitrationID;
-
+                disputeIDToArbitrationID[disputeID] = arbitrationID;
                 arbitrationIDToDisputeExists[arbitrationID] = true;
 
                 // At this point, arbitration.deposit is guaranteed to be greater than or equal to the arbitration cost.
@@ -243,12 +237,10 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      * @notice Takes up to the total amount required to fund an answer. Reimburses the rest. Creates an appeal if at least two answers are funded.
      * @param _arbitrationID The ID of the arbitration, which is projectID cast into uint256.
      * @param _answer One of the possible rulings the arbitrator can give that the funder considers to be the correct answer to the project.
-     * Note that the answer has Kleros denomination, meaning that it has '+1' offset compared to Realitio format.
-     * Also note that '0' answer can be funded.
      * @return Whether the answer was fully funded or not.
      */
     function fundAppeal(uint256 _arbitrationID, uint256 _answer) external payable override returns (bool) {
-        require(_answer <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, "Answer is out of bounds");
+        require(_answer != 0 && _answer <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, "Answer is out of bounds");
         ArbitrationRequest storage arbitration = arbitrationRequests[_arbitrationID];
         require(arbitration.status == Status.Created, "No dispute to appeal.");
 
@@ -382,8 +374,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      */
     function rule(uint256 _disputeID, uint256 _ruling) external override {
         require(_ruling <= NUMBER_OF_CHOICES_FOR_ARBITRATOR, "Invalid ruling");
-        DisputeDetails storage disputeDetails = disputeIDToDisputeDetails[_disputeID];
-        uint256 arbitrationID = disputeDetails.arbitrationID;
+        uint256 arbitrationID = disputeIDToArbitrationID[_disputeID];
 
         ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(msg.sender == address(arbitrator), "Only arbitrator allowed");
@@ -588,7 +579,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      * @return localDisputeID Dispute id as in arbitrable contract.
      */
     function externalIDtoLocalID(uint256 _externalDisputeID) external view override returns (uint256) {
-        return disputeIDToDisputeDetails[_externalDisputeID].arbitrationID;
+        return disputeIDToArbitrationID[_externalDisputeID];
     }
 
     function _processMessageFromChild(bytes memory _data) internal override {
