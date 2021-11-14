@@ -1,4 +1,4 @@
-const { ethers } = require("hardhat");
+const { ethers, web3 } = require("hardhat");
 const { solidity, deployMockContract } = require("ethereum-waffle");
 const { time } = require("@openzeppelin/test-helpers");
 const { use, expect } = require("chai");
@@ -9,6 +9,9 @@ const DAIABI = require("./DAIABI.json");
 
 use(solidity);
 
+// BN and BigNumber are not compatible.
+// Needed to manipulate time from @openzeppelin/test-helpers
+const BN = web3.utils.BN;
 const { BigNumber } = ethers;
 const { hexZeroPad } = ethers.utils;
 const ADDRESS_ZERO = ethers.constants.AddressZero;
@@ -58,7 +61,21 @@ describe("Cross-chain arbitration with appeals", () => {
     const currentTime = await time.latest();
     await homeProxy
       .connect(requester)
-      .createProject(mockDAI.address, 100, ADDRESS_ZERO, 100, currentTime + 1, currentTime + 1000, 1, "ipfshash");
+      .createProject(
+        mockDAI.address,
+        100,
+        ADDRESS_ZERO,
+        100,
+        currentTime.add(new BN("1")).toString(),
+        currentTime.add(new BN("1000")).toString(),
+        1,
+        "ipfshash"
+      );
+
+    await time.increase(1);
+
+    // create dispute for invest
+    await homeProxy.connect(requester).createArbitrationForInvestor(1);
   });
 
   it("Should correctly set the initial values", async () => {
@@ -650,12 +667,12 @@ describe("Cross-chain arbitration with appeals", () => {
       .withArgs(arbitrator.address, arbitrationID, await other.getAddress(), "text");
   });
 
-  it("Should forbid requesting arbitration after a dispute has been created for the given question", async () => {
+  it("Should forbid requesting arbitration after a dispute has been created for the given project", async () => {
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
 
     await expect(
       foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost })
-    ).to.be.revertedWith("Arbitration already requested");
+    ).to.be.revertedWith("Dispute already exists");
   });
 
   async function deployContracts(signer) {
