@@ -58,7 +58,7 @@ describe("Cross-chain arbitration with appeals", () => {
     const currentTime = await time.latest();
     await homeProxy
       .connect(requester)
-      .createProject(mockDAI.address, 100, ADDRESS_ZERO, 100, currentTime + 10, currentTime + 1000, 1, "ipfshash");
+      .createProject(mockDAI.address, 100, ADDRESS_ZERO, 100, currentTime + 1, currentTime + 1000, 1, "ipfshash");
   });
 
   it("Should correctly set the initial values", async () => {
@@ -665,8 +665,8 @@ describe("Cross-chain arbitration with appeals", () => {
     const FxRoot = await ethers.getContractFactory("MockFxRoot", signer);
     const fxRoot = await FxRoot.deploy();
 
-    const ForeignProxy = await ethers.getContractFactory("SundialForeignArbitrationProxyWithAppeals", signer);
-    const HomeProxy = await ethers.getContractFactory("DAISO", signer);
+    const ForeignProxy = await ethers.getContractFactory("MockForeignArbitrationProxyWithAppeals", signer);
+    const HomeProxy = await ethers.getContractFactory("MockDAISO", signer);
 
     const address = await signer.getAddress();
     const nonce = await signer.getTransactionCount();

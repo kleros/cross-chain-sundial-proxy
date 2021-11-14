@@ -46,13 +46,14 @@ abstract contract FxBaseChildTunnel is IFxMessageProcessor {
     /**
      * @notice Emit message that can be received on Root Tunnel
      * @dev Call the internal function when need to emit message
+     * @dev Here, virtual is required to be able to mock this function in tests
      * @param message bytes message that will be sent to Root Tunnel
      * some message examples -
      *   abi.encode(tokenId);
      *   abi.encode(tokenId, tokenMetadata);
      *   abi.encode(messageType, messageData);
      */
-    function _sendMessageToRoot(bytes memory message) internal {
+    function _sendMessageToRoot(bytes memory message) internal virtual {
         emit MessageSent(message);
     }
 
