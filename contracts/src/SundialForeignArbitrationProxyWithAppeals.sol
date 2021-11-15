@@ -17,7 +17,7 @@ import {IForeignArbitrationProxy, IHomeArbitrationProxy} from "./ArbitrationProx
 import {FxBaseRootTunnel} from "./dependencies/0.7.x/FxBaseRootTunnel.sol";
 
 /**
- * @title Arbitration proxy for Realitio on Ethereum side (A.K.A. the Foreign Chain).
+ * @title Arbitration proxy for Sundial on Ethereum side (A.K.A. the Foreign Chain).
  * This version of the contract has an appeal support.
  * @dev This contract is meant to be deployed to the Ethereum chains where Kleros is deployed.
  */
@@ -44,7 +44,7 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         uint248 deposit; // The deposit paid by the requester at the time of the arbitration.
         address requester; // The address of the requester who managed to go through with the arbitration request.
         uint256 disputeID; // The ID of the dispute in arbitrator contract.
-        uint256 answer; // The answer given by the arbitrator shifted by -1 to match Realitio format.
+        uint256 answer; // The answer given by the arbitrator.
         Round[] rounds; // Tracks each appeal round of a dispute.
     }
 
@@ -65,8 +65,6 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
 
     IArbitrator public immutable arbitrator; // The address of the arbitrator. TRUSTED.
     bytes public arbitratorExtraData; // The extra data used to raise a dispute in the arbitrator.
-
-    string public termsOfService; // The path for the Terms of Service for Kleros as an arbitrator for Realitio.
 
     // Multipliers are in basis points.
     // Multiplier for calculating the appeal fee that must be paid for the
@@ -98,7 +96,6 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
      * @param _arbitrator Arbitrator contract address.
      * @param _arbitratorExtraData The extra data used to raise a dispute in the arbitrator.
      * @param _metaEvidence The URI of the meta evidence file.
-     * @param _termsOfService The path for the Terms of Service for Kleros as an arbitrator for Realitio.
      * @param _winnerMultiplier Multiplier for calculating the appeal cost of the winning answer.
      * @param _loserMultiplier Multiplier for calculation the appeal cost of the losing answer.
      * @param _loserAppealPeriodMultiplier Multiplier for calculating the appeal period for the losing answer.
@@ -110,14 +107,12 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         IArbitrator _arbitrator,
         bytes memory _arbitratorExtraData,
         string memory _metaEvidence,
-        string memory _termsOfService,
         uint256 _winnerMultiplier,
         uint256 _loserMultiplier,
         uint256 _loserAppealPeriodMultiplier
     ) FxBaseRootTunnel(_checkpointManager, _fxRoot, _homeProxy) {
         arbitrator = _arbitrator;
         arbitratorExtraData = _arbitratorExtraData;
-        termsOfService = _termsOfService;
         winnerMultiplier = _winnerMultiplier;
         loserMultiplier = _loserMultiplier;
         loserAppealPeriodMultiplier = _loserAppealPeriodMultiplier;

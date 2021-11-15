@@ -28,7 +28,6 @@ const gasPrice = 8000000;
 const MAX_ANSWER = "2";
 
 const metaEvidence = "ipfs/X";
-const termsOfService = "ipfs/Y";
 const oneETH = BigNumber.from(BigInt(1e18));
 
 let arbitrator;
@@ -76,7 +75,6 @@ describe("Cross-chain arbitration with appeals", () => {
   it("Should correctly set the initial values", async () => {
     expect(await foreignProxy.arbitrator()).to.equal(arbitrator.address);
     expect(await foreignProxy.arbitratorExtraData()).to.equal(arbitratorExtraData);
-    expect(await foreignProxy.termsOfService()).to.equal(termsOfService);
 
     // 0 - winner, 1 - loser, 2 - loserAppealPeriod.
     const multipliers = await foreignProxy.getMultipliers();
@@ -675,7 +673,6 @@ describe("Cross-chain arbitration with appeals", () => {
       arbitrator.address,
       arbitratorExtraData,
       metaEvidence,
-      termsOfService,
       winnerMultiplier,
       loserMultiplier,
       loserAppealPeriodMultiplier

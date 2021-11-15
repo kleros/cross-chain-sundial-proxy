@@ -9,7 +9,6 @@ const paramsByChainId = {
     arbitratorExtraData:
       "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     metaEvidence: "/ipfs/Qmc2cpRZgT5PmR4ZikDsVG54xejKF62qSBBnYf4R5bpiNH/realitio.json",
-    termsOfService: "/ipfs/Qmf67KPWvFLSQEczsb8Kh9HtGUevNtSSVELqTS8yTe95GW/omen-rules.pdf",
   },
   1: {
     checkpointManager: "0x86e4dc95c7fbdbf52e33d563bbdb00823894c287",
@@ -18,7 +17,6 @@ const paramsByChainId = {
     arbitratorExtraData:
       "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f4",
     metaEvidence: "/ipfs/Qmc6bWTzPMFeRx9VWHwnDpDXfimwNsvnEgJo3gymg37rRd/realitio.json",
-    termsOfService: "/ipfs/QmZM12kkguXFk2C94ykrKpambt4iUVKsVsxGxDEdLS68ws/omen-rules.pdf",
   },
 };
 
@@ -38,8 +36,7 @@ async function deployForeignProxy({ deployments, getNamedAccounts, getChainId, e
   const homeChainProvider = new providers.JsonRpcProvider(url);
   const nonce = await homeChainProvider.getTransactionCount(counterPartyDeployer);
 
-  const { checkpointManager, fxRoot, arbitrator, arbitratorExtraData, metaEvidence, termsOfService } =
-    paramsByChainId[chainId];
+  const { checkpointManager, fxRoot, arbitrator, arbitratorExtraData, metaEvidence } = paramsByChainId[chainId];
 
   // Foreign Proxy deploy will happen AFTER the Home Proxy deploy, so we need to subtract 1 from the nonce
   const homeProxyAddress = getContractAddress(counterPartyDeployer, nonce - 1);
@@ -53,7 +50,6 @@ async function deployForeignProxy({ deployments, getNamedAccounts, getChainId, e
       arbitrator,
       arbitratorExtraData,
       metaEvidence,
-      termsOfService,
       5000,
       20000,
       5000,
