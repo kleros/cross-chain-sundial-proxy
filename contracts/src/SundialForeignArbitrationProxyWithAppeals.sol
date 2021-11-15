@@ -202,9 +202,10 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(arbitration.status == Status.Requested, "Invalid arbitration status");
         uint256 deposit = arbitration.deposit;
+        address requester = arbitration.requester;
 
         delete arbitrationRequests[arbitrationID];
-        payable(arbitration.requester).send(deposit);
+        payable(requester).send(deposit);
 
         emit ArbitrationCanceled(_projectID);
     }
@@ -218,9 +219,10 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
         ArbitrationRequest storage arbitration = arbitrationRequests[arbitrationID];
         require(arbitration.status == Status.Failed, "Invalid arbitration status");
         uint256 deposit = arbitration.deposit;
+        address requester = arbitration.requester;
 
         delete arbitrationRequests[arbitrationID];
-        payable(arbitration.requester).send(deposit);
+        payable(requester).send(deposit);
 
         bytes4 methodSelector = IHomeArbitrationProxy(0).receiveArbitrationFailure.selector;
         bytes memory data = abi.encodeWithSelector(methodSelector, _projectID);

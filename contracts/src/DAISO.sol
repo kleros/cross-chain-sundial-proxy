@@ -821,21 +821,54 @@ contract DAISO is IHomeArbitrationProxy, Ownable, ReentrancyGuard, DAISOInterfac
         Types.Arbitration storage arbitration = arbitrations[_projectId];
 
         if (arbitration.status == Types.Status.Reclaimed && block.timestamp - arbitration.reclaimedAt <= 86400) {
-            arbitrations[_projectId].status = Types.Status.Disputed;
+            arbitration.status = Types.Status.RequestReceived;
 
-            bytes4 selector = IForeignArbitrationProxy.receiveArbitrationAcknowledgement.selector;
-            bytes memory data = abi.encodeWithSelector(selector, _projectId);
-            _sendMessageToRoot(data);
-
-            emit RequestAcknowledged(_projectId);
+            emit RequestReceived(_projectId);
         } else {
-            // Invalid Request
-            bytes4 selector = IForeignArbitrationProxy.receiveArbitrationCancelation.selector;
-            bytes memory data = abi.encodeWithSelector(selector, _projectId);
-            _sendMessageToRoot(data);
+            arbitration.status = Types.Status.RequestRejected;
 
-            emit RequestCanceled(_projectId);
+            emit RequestRejected(_projectId);
         }
+    }
+
+    /**
+     * @notice Handles arbitration request after it has been received and validated.
+     * @dev This method exists because `receiveArbitrationRequest` is called by the Polygon Bridge
+     * and cannot send messages back to it.
+     * @param _projectId The ID of the project.
+     */
+    function handleReceivedRequest(uint256 _projectId) external override {
+        Types.Arbitration storage arbitration = arbitrations[_projectId];
+        require(arbitration.status == Types.Status.RequestReceived, "Invalid request status");
+
+        arbitration.status = Types.Status.Disputed;
+
+        bytes4 selector = IForeignArbitrationProxy.receiveArbitrationAcknowledgement.selector;
+        bytes memory data = abi.encodeWithSelector(selector, _projectId);
+        _sendMessageToRoot(data);
+
+        emit RequestAcknowledged(_projectId);
+    }
+
+    /**
+     * @notice Handles arbitration request after it has been rejected.
+     * @dev This method exists because `receiveArbitrationRequest` is called by the Polygon Bridge
+     * and cannot send messages back to it.
+     * @param _projectId The ID of the project.
+     */
+    function handleRejectedRequest(uint256 _projectId) external override {
+        Types.Arbitration storage arbitration = arbitrations[_projectId];
+        require(arbitration.status == Types.Status.RequestRejected, "Invalid request status");
+
+        // At this point, only the arbitration.status is set,
+        // simply reseting the status to Status.Reclaimed is enough.
+        arbitration.status = Types.Status.Reclaimed;
+
+        bytes4 selector = IForeignArbitrationProxy.receiveArbitrationCancelation.selector;
+        bytes memory data = abi.encodeWithSelector(selector, _projectId);
+        _sendMessageToRoot(data);
+
+        emit RequestCanceled(_projectId);
     }
 
     /**

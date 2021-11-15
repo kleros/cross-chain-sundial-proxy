@@ -44,6 +44,8 @@ library Types {
     enum Status {
         Initial,
         Reclaimed,
+        RequestReceived,
+        RequestRejected,
         Disputed,
         Resolved
     }

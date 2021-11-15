@@ -95,12 +95,12 @@ describe("Cross-chain arbitration with appeals", () => {
       .withArgs(projectID, await requester.getAddress());
 
     const arbitration = await foreignProxy.arbitrationRequests(projectID);
-    expect(arbitration[0]).to.equal(2, "Incorrect status of the arbitration after creating a request");
-    expect(arbitration[1]).to.equal(0, "Deposit value stored incorrectly");
+    expect(arbitration[0]).to.equal(1, "Incorrect status of the arbitration after creating a request");
+    expect(arbitration[1]).to.equal(1000, "Deposit value stored incorrectly");
 
     await expect(
       foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost })
-    ).to.be.revertedWith("Dispute already exists");
+    ).to.be.revertedWith("Arbitration already requested");
   });
 
   it("Should set correct values when acknowledging arbitration and create a dispute", async () => {
@@ -111,6 +111,16 @@ describe("Cross-chain arbitration with appeals", () => {
     await expect(foreignProxy.connect(other).receiveArbitrationAcknowledgement(projectID)).to.be.revertedWith(
       "Can only be called via bridge"
     );
+
+    await expect(homeProxy.handleReceivedRequest(projectID))
+      .to.emit(arbitrator, "DisputeCreation")
+      .withArgs(2, foreignProxy.address)
+      .to.emit(foreignProxy, "ArbitrationCreated")
+      .withArgs(projectID, 2)
+      .to.emit(foreignProxy, "Dispute")
+      .withArgs(arbitrator.address, 2, 0, 1) // Arbitrator, DisputeID, MetaevidenceID, ArbitrationID
+      .to.emit(homeProxy, "RequestAcknowledged")
+      .withArgs(projectID);
 
     const arbitration = await foreignProxy.arbitrationRequests(projectID);
     expect(arbitration[0]).to.equal(2, "Incorrect status of the arbitration after acknowledging arbitration");
@@ -144,20 +154,26 @@ describe("Cross-chain arbitration with appeals", () => {
   it("Should cancel arbitration correctly", async () => {
     const nonExistentProjectID = 11;
     await expect(foreignProxy.connect(requester).createDisputeForProjectRequest(nonExistentProjectID, { value: 5555 }))
-      .to.emit(homeProxy, "RequestCanceled")
+      .to.emit(homeProxy, "RequestRejected")
       .withArgs(nonExistentProjectID)
       .to.emit(foreignProxy, "ArbitrationRequested")
       .withArgs(nonExistentProjectID, await requester.getAddress());
 
     const oldBalance = await requester.getBalance();
-    await expect(foreignProxy.connect(other).receiveArbitrationCancelation(projectID)).to.be.revertedWith(
+    await expect(foreignProxy.connect(other).receiveArbitrationCancelation(nonExistentProjectID)).to.be.revertedWith(
       "Can only be called via bridge"
     );
+
+    await expect(homeProxy.handleRejectedRequest(nonExistentProjectID))
+      .to.emit(foreignProxy, "ArbitrationCanceled")
+      .withArgs(nonExistentProjectID)
+      .to.emit(homeProxy, "RequestCanceled")
+      .withArgs(nonExistentProjectID);
 
     const newBalance = await requester.getBalance();
     expect(newBalance).to.equal(oldBalance.add(5555), "Requester was not reimbursed correctly");
 
-    const arbitration = await foreignProxy.arbitrationRequests(projectID);
+    const arbitration = await foreignProxy.arbitrationRequests(nonExistentProjectID);
     expect(arbitration[0]).to.equal(0, "Status should be empty");
     expect(arbitration[1]).to.equal(0, "Deposit should be empty");
   });
@@ -170,19 +186,25 @@ describe("Cross-chain arbitration with appeals", () => {
 
     await arbitrator.setArbitrationPrice(2000); // Increase the cost so creation fails.
 
-    const arbitration = await foreignProxy.arbitrationRequests(projectID);
+    await expect(homeProxy.handleReceivedRequest(projectID))
+      .to.emit(foreignProxy, "ArbitrationFailed")
+      .withArgs(projectID)
+      .to.emit(homeProxy, "RequestAcknowledged")
+      .withArgs(projectID);
+
+    let arbitration = await foreignProxy.arbitrationRequests(projectID);
     expect(arbitration[0]).to.equal(4, "Status should be Failed");
 
-    await expect(foreignProxy.handleFailedDisputeCreation(projectID, await requester.getAddress()))
+    await expect(foreignProxy.handleFailedDisputeCreation(projectID))
       .to.emit(homeProxy, "ArbitrationFailed")
-      .withArgs(projectID, await requester.getAddress())
+      .withArgs(projectID)
       .to.emit(foreignProxy, "ArbitrationCanceled")
-      .withArgs(projectID, await requester.getAddress());
+      .withArgs(projectID);
 
     const newBalance = await requester.getBalance();
     expect(newBalance).to.equal(oldBalance.add(arbitrationCost), "Requester was not reimbursed correctly");
 
-    //const arbitration = await foreignProxy.arbitrationRequests(0);
+    arbitration = await foreignProxy.arbitrationRequests(projectID);
     expect(arbitration[0]).to.equal(0, "Status should be empty");
     expect(arbitration[1]).to.equal(0, "Deposit should be empty");
   });
@@ -190,6 +212,7 @@ describe("Cross-chain arbitration with appeals", () => {
   it("Should handle the ruling correctly", async () => {
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
 
+    await homeProxy.handleReceivedRequest(projectID);
     await expect(foreignProxy.rule(2, 2)).to.be.revertedWith("Only arbitrator allowed");
 
     const arbAnswer = 2;
@@ -214,12 +237,13 @@ describe("Cross-chain arbitration with appeals", () => {
     let txFee;
     let roundInfo;
 
+    await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
+
     await expect(foreignProxy.connect(crowdfunder1).fundAppeal(arbitrationID, 1, { value: 1000 })).to.be.revertedWith(
       "No dispute to appeal."
     );
 
-    await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
-
+    await homeProxy.handleReceivedRequest(projectID);
     // Check that can't fund the dispute that is not appealable.
     await expect(foreignProxy.connect(crowdfunder1).fundAppeal(arbitrationID, 1, { value: 1000 })).to.be.revertedWith(
       "Appeal period is over."
@@ -304,6 +328,8 @@ describe("Cross-chain arbitration with appeals", () => {
     let roundInfo;
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
 
+    await homeProxy.handleReceivedRequest(projectID);
+
     await arbitrator.giveAppealableRuling(2, 2, appealCost, appealTimeOut);
 
     await foreignProxy.connect(crowdfunder1).fundAppeal(arbitrationID, 1, { value: 8500 });
@@ -332,6 +358,8 @@ describe("Cross-chain arbitration with appeals", () => {
 
   it("Should not fund the appeal after the timeout", async () => {
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
+
+    await homeProxy.handleReceivedRequest(projectID);
 
     await arbitrator.giveAppealableRuling(2, 2, appealCost, appealTimeOut);
 
@@ -362,6 +390,8 @@ describe("Cross-chain arbitration with appeals", () => {
     const crowdfunder2Address = await crowdfunder2.getAddress();
 
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
+
+    await homeProxy.handleReceivedRequest(projectID);
 
     await arbitrator.giveAppealableRuling(2, 1, appealCost, appealTimeOut);
 
@@ -518,6 +548,8 @@ describe("Cross-chain arbitration with appeals", () => {
 
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
 
+    await homeProxy.handleReceivedRequest(projectID);
+
     await arbitrator.giveAppealableRuling(2, 2, appealCost, appealTimeOut);
 
     // LoserFee = 8500. AppealCost = 5000.
@@ -544,6 +576,8 @@ describe("Cross-chain arbitration with appeals", () => {
     let newBalance;
 
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
+
+    await homeProxy.handleReceivedRequest(projectID);
 
     await arbitrator.giveAppealableRuling(2, 2, appealCost, appealTimeOut);
 
@@ -585,6 +619,8 @@ describe("Cross-chain arbitration with appeals", () => {
   it("Should switch the ruling if the loser paid appeal fees while winner did not", async () => {
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
 
+    await homeProxy.handleReceivedRequest(projectID);
+
     await arbitrator.giveAppealableRuling(2, 1, appealCost, appealTimeOut);
 
     await foreignProxy.connect(crowdfunder1).fundAppeal(arbitrationID, 2, { value: oneETH });
@@ -599,6 +635,8 @@ describe("Cross-chain arbitration with appeals", () => {
   it("Should correctly submit evidence", async () => {
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
 
+    await homeProxy.handleReceivedRequest(projectID);
+
     await expect(foreignProxy.connect(other).submitEvidence(arbitrationID, "text"))
       .to.emit(foreignProxy, "Evidence")
       .withArgs(arbitrator.address, arbitrationID, await other.getAddress(), "text");
@@ -606,6 +644,8 @@ describe("Cross-chain arbitration with appeals", () => {
 
   it("Should forbid requesting arbitration after a dispute has been created for the given project", async () => {
     await foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost });
+
+    await homeProxy.handleReceivedRequest(projectID);
 
     await expect(
       foreignProxy.connect(requester).createDisputeForProjectRequest(projectID, { value: arbitrationCost })

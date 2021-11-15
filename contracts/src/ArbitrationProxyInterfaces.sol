@@ -7,6 +7,20 @@ import {IEvidence} from "@kleros/erc-792/contracts/erc-1497/IEvidence.sol";
 
 interface IHomeArbitrationProxy {
     /**
+     * @notice To be emitted when the Realitio contract has been notified of an arbitration request.
+     * @param _projectID The ID of the question.
+     */
+    event RequestReceived(uint256 indexed _projectID);
+
+    /**
+     * @notice To be emitted when arbitration request is rejected.
+     * @dev This can happen if the current bond for the question is higher than maxPrevious
+     * or if the question is already finalized.
+     * @param _projectID The ID of the question.
+     */
+    event RequestRejected(uint256 indexed _projectID);
+
+    /**
      * @notice To be emitted when the arbitration request acknowledgement is sent to the Foreign Chain.
      * @param _projectID The ID of the question.
      */
@@ -37,6 +51,22 @@ interface IHomeArbitrationProxy {
      * @param _projectID The ID of the project.
      */
     function receiveCreateDisputeRequest(uint256 _projectID) external;
+
+    /**
+     * @notice Handles arbitration request after it has been received and validated.
+     * @dev This method exists because `receiveArbitrationRequest` is called by the Polygon Bridge
+     * and cannot send messages back to it.
+     * @param _projectId The ID of the project.
+     */
+    function handleReceivedRequest(uint256 _projectId) external;
+
+    /**
+     * @notice Handles arbitration request after it has been rejected.
+     * @dev This method exists because `receiveArbitrationRequest` is called by the Polygon Bridge
+     * and cannot send messages back to it.
+     * @param _projectId The ID of the project.
+     */
+    function handleRejectedRequest(uint256 _projectId) external;
 
     /**
      * @notice Receives a failed attempt to request arbitration. TRUSTED.
