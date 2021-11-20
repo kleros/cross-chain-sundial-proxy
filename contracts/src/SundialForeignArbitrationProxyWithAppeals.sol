@@ -83,6 +83,14 @@ contract SundialForeignArbitrationProxyWithAppeals is IForeignArbitrationProxy, 
     // Whether a dispute has already been created for the given arbitration ID or not.
     mapping(uint256 => bool) public arbitrationIDToDisputeExists;
 
+    /**
+     * @dev This is applied to functions called via the internal function
+     * `_processMessageFromChild` which is invoked via the Polygon bridge (see FxBaseRootTunnel)
+     *
+     * The functions requiring this modifier cannot simply be declared internal as
+     * we still need the ABI generated of these functions to be able to call them
+     * across contracts and have the compiler type check the function signatures.
+     */
     modifier onlyBridge() {
         require(msg.sender == address(this), "Can only be called via bridge");
         _;
